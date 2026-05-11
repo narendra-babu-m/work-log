@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude OS Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+/* ─── Claude Palette ─────────────────────────────────── */
+:root {
+  --bg:        #1a1b1e;
+  --surface:   #242528;
+  --surface2:  #2d2e32;
+  --border:    #3a3b3f;
+  --border2:   #4a4b50;
+  --text:      #ececec;
+  --text-dim:  #8b8d94;
+  --text-faint:#555760;
+  --accent:    #d97757;   /* Claude coral/orange */
+  --accent2:   #c96f46;
+  --purple:    #8b7cf6;
+  --teal:      #4ec9b0;
+  --green:     #4ade80;
+  --yellow:    #f5c842;
+  --red:       #f87171;
+  --radius:    8px;
+  --radius-lg: 12px;
+  --font:      'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  --mono:      'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* ─── Reset + Base ───────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ─── Layout: Header + Grid ──────────────────────────── */
+#header {
+  height: 48px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+}
+
+#header .logo {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 700; font-size: 14px; color: var(--text);
+  letter-spacing: -0.3px;
+}
+#header .logo-icon {
+  width: 24px; height: 24px;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+#header .subtitle {
+  color: var(--text-dim); font-size: 12px;
+}
+#header .spacer { flex: 1; }
+#header .timestamp {
+  color: var(--text-faint); font-size: 11px; font-family: var(--mono);
+}
+#header .refresh-btn {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-dim); padding: 4px 10px; border-radius: 6px;
+  cursor: pointer; font-size: 11px; transition: all 0.15s;
+}
+#header .refresh-btn:hover { background: var(--border); color: var(--text); }
+
+/* Global search */
+#global-search {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); padding: 5px 10px; border-radius: 6px;
+  font-size: 12px; width: 200px; outline: none;
+  font-family: var(--font);
+}
+#global-search:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(217,119,87,0.15); }
+#global-search::placeholder { color: var(--text-faint); }
+
+/* ─── Dashboard Grid ─────────────────────────────────── */
+#dashboard {
+  position: fixed;
+  top: 48px; left: 0; right: 0; bottom: 0;
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  grid-template-rows: auto auto 1fr;
+  gap: 1px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+/* ─── Panels ─────────────────────────────────────────── */
+.panel {
+  background: var(--bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.panel-scroll {
+  overflow-y: auto;
+  flex: 1;
+  padding: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+}
+.panel-scroll::-webkit-scrollbar { width: 4px; }
+.panel-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.panel-header {
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
+}
+.panel-title {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--text-dim);
+}
+.panel-count {
+  background: var(--surface2); color: var(--text-faint);
+  padding: 1px 6px; border-radius: 10px; font-size: 10px;
+  font-family: var(--mono);
+}
+.panel-spacer { flex: 1; }
+
+/* Panel filter */
+.panel-filter {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); padding: 4px 8px; border-radius: 5px;
+  font-size: 11px; width: 110px; outline: none;
+  font-family: var(--font);
+}
+.panel-filter:focus { border-color: var(--accent); }
+.panel-filter::placeholder { color: var(--text-faint); }
+
+/* ─── Grid Areas ─────────────────────────────────────── */
+/* Col 1: Sprint + MCPs */
+#panel-sprint {
+  grid-column: 1; grid-row: 1;
+}
+#panel-mcps {
+  grid-column: 1; grid-row: 2 / 4;
+}
+
+/* Col 2: Charts (top) + Activity (bottom) */
+#panel-charts {
+  grid-column: 2; grid-row: 1 / 3;
+}
+#panel-activity {
+  grid-column: 2; grid-row: 3;
+}
+
+/* Col 3: Stats + Hooks + Skills */
+#panel-stats {
+  grid-column: 3; grid-row: 1;
+}
+#panel-hooks {
+  grid-column: 3; grid-row: 2;
+}
+#panel-skills {
+  grid-column: 3; grid-row: 3;
+}
+
+/* ─── Stat Cards ─────────────────────────────────────── */
+.stat-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; padding: 14px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+.stat-val {
+  font-size: 22px; font-weight: 700;
+  font-family: var(--mono);
+  color: var(--text); line-height: 1.1;
+}
+.stat-label {
+  font-size: 10px; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-top: 3px;
+}
+.stat-card.accent .stat-val { color: var(--accent); }
+.stat-card.purple .stat-val { color: var(--purple); }
+.stat-card.teal .stat-val { color: var(--teal); }
+.stat-card.green .stat-val { color: var(--green); }
+
+/* ─── Cards (MCP, etc.) ──────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 10px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.card:hover { border-color: var(--border2); background: var(--surface2); }
+.card-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, rgba(217,119,87,0.15), rgba(139,124,246,0.15));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+  border: 1px solid rgba(217,119,87,0.2);
+}
+.card-body { flex: 1; min-width: 0; }
+.card-title { font-size: 12px; font-weight: 600; color: var(--text); }
+.card-sub {
+  font-size: 10px; color: var(--text-faint);
+  font-family: var(--mono);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.card-badge {
+  font-size: 10px; padding: 2px 7px; border-radius: 10px;
+  font-weight: 500; flex-shrink: 0;
+}
+.card-badge.active {
+  background: rgba(74,222,128,0.12);
+  color: var(--green);
+  border: 1px solid rgba(74,222,128,0.25);
+}
+
+/* ─── Sprint Panel ───────────────────────────────────── */
+.sprint-goal {
+  font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text);
+}
+.sprint-meta {
+  font-size: 11px; color: var(--text-dim); margin-bottom: 10px;
+  font-family: var(--mono);
+}
+.progress-wrap {
+  height: 6px; background: var(--surface2); border-radius: 3px;
+  overflow: hidden; margin-bottom: 5px;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--purple));
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.progress-label {
+  font-size: 11px; color: var(--accent); font-family: var(--mono);
+}
+
+/* ─── Charts Panel ───────────────────────────────────── */
+.chart-wrap {
+  padding: 14px 16px;
+}
+.chart-title {
+  font-size: 11px; color: var(--text-dim); margin-bottom: 8px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.charts-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ─── Activity Feed ──────────────────────────────────── */
+.activity-row {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: default;
+  transition: background 0.1s;
+}
+.activity-row:last-child { border-bottom: none; }
+.activity-row:hover { background: var(--surface); border-radius: var(--radius); padding: 9px 8px; margin: 0 -8px; }
+.activity-meta {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
+}
+.activity-date {
+  font-size: 10px; color: var(--text-faint); font-family: var(--mono);
+  min-width: 38px;
+}
+.activity-topic {
+  font-size: 12px; color: var(--text);
+}
+.activity-preview {
+  font-size: 11px; color: var(--text-dim);
+  margin-top: 3px; line-height: 1.4;
+}
+
+/* ─── Hooks Table ────────────────────────────────────── */
+.data-table {
+  width: 100%; border-collapse: collapse;
+}
+.data-table th {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--text-faint);
+  padding: 0 8px 8px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.data-table td {
+  padding: 7px 8px; border-bottom: 1px solid var(--border);
+  font-size: 11px; color: var(--text);
+  vertical-align: top;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--surface); }
+
+/* ─── Badges + Chips ─────────────────────────────────── */
+.badge {
+  font-size: 9px; padding: 2px 6px; border-radius: 8px;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;
+}
+.badge-event {
+  background: rgba(139,124,246,0.12); color: var(--purple);
+  border: 1px solid rgba(139,124,246,0.25);
+}
+.badge-pub {
+  background: rgba(74,222,128,0.1); color: var(--green);
+  border: 1px solid rgba(74,222,128,0.2);
+}
+.badge-priv {
+  background: rgba(139,141,148,0.1); color: var(--text-faint);
+  border: 1px solid rgba(139,141,148,0.2);
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 16px; }
+.chip {
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text-dim); padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-family: var(--mono); cursor: default;
+  transition: all 0.15s;
+}
+.chip:hover {
+  background: rgba(217,119,87,0.1); border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ─── Utilities ──────────────────────────────────────── */
+.mono { font-family: var(--mono); }
+.truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 200px; }
+.empty-state {
+  color: var(--text-faint); font-size: 12px;
+  padding: 20px 0; text-align: center; line-height: 1.6;
+}
+.hidden { display: none !important; }
+
+/* Model table */
+.model-table-wrap { padding: 0 16px 14px; }
+
+/* ─── Scrollbar (webkit) ─────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ─── Header ──────────────────────────────────────────── -->
+<div id="header">
+  <div class="logo">
+    <div class="logo-icon">⬡</div>
+    Claude OS
+  </div>
+  <span class="subtitle">Professional Workspace Dashboard</span>
+  <div class="spacer"></div>
+  <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
+  <span class="timestamp">Generated 2026-05-11 11:48</span>
+  <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
+</div>
+
+<!-- ─── Dashboard Grid ──────────────────────────────────── -->
+<div id="dashboard">
+
+  <!-- ─── Col 1 Row 1: Sprint ─────────────────────────── -->
+  <div class="panel" id="panel-sprint">
+    <div class="panel-header">
+      <span class="panel-title">Current Sprint</span>
+    </div>
+    <div class="panel-scroll">
+      
+        <div class="sprint-goal">[One-line sprint goal]</div>
+        <div class="sprint-meta">YYYY-MM-DD → YYYY-MM-DD</div>
+        <div class="progress-wrap">
+          <div class="progress-bar" style="width:0%"></div>
+        </div>
+        <div class="progress-label">0% complete</div>
+    </div>
+  </div>
+
+  <!-- ─── Col 1 Row 2+: MCPs ──────────────────────────── -->
+  <div class="panel" id="panel-mcps">
+    <div class="panel-header">
+      <span class="panel-title">MCP Servers</span>
+      <span class="panel-count" id="mcp-count">4</span>
+      <div class="panel-spacer"></div>
+      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-mcps', this.value, '.mcp-card')">
+    </div>
+    <div class="panel-scroll">
+      
+        <div class="card mcp-card" data-filter-text="dm-pod2-mcp node">
+          <div class="card-icon">⬡</div>
+          <div class="card-body">
+            <div class="card-title">dm-pod2-mcp</div>
+            <div class="card-sub">node /Users/I576292/Library/CloudStorage/OneDrive-SAPSE/Projects/</div>
+          </div>
+          <div class="card-badge active">active</div>
+        </div>
+        <div class="card mcp-card" data-filter-text="@ui5/mcp-server npx">
+          <div class="card-icon">⬡</div>
+          <div class="card-body">
+            <div class="card-title">@ui5/mcp-server</div>
+            <div class="card-sub">npx @ui5/mcp-server</div>
+          </div>
+          <div class="card-badge active">active</div>
+        </div>
+        <div class="card mcp-card" data-filter-text="cds-mcp npx">
+          <div class="card-icon">⬡</div>
+          <div class="card-body">
+            <div class="card-title">cds-mcp</div>
+            <div class="card-sub">npx -y @cap-js/mcp-server</div>
+          </div>
+          <div class="card-badge active">active</div>
+        </div>
+        <div class="card mcp-card" data-filter-text="gitnexus /opt/homebrew/bin/gitnexus">
+          <div class="card-icon">⬡</div>
+          <div class="card-body">
+            <div class="card-title">gitnexus</div>
+            <div class="card-sub">/opt/homebrew/bin/gitnexus mcp</div>
+          </div>
+          <div class="card-badge active">active</div>
+        </div>
+    </div>
+  </div>
+
+  <!-- ─── Col 2 Row 1+2: Charts ───────────────────────── -->
+  <div class="panel" id="panel-charts">
+    <div class="panel-header">
+      <span class="panel-title">Activity</span>
+    </div>
+    <div class="panel-scroll">
+      <div class="chart-wrap">
+        <div class="charts-row">
+          <div>
+            <div class="chart-title">Last 30 Days</div>
+            <canvas id="chart-daily" height="130"></canvas>
+          </div>
+          <div>
+            <div class="chart-title">By Hour of Day</div>
+            <canvas id="chart-hourly" height="130"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="model-table-wrap">
+        <div class="chart-title">Top Models Used</div>
+        <table class="data-table">
+          <thead><tr><th>Model</th><th>Events</th></tr></thead>
+          <tbody><tr><td colspan='2' class='empty-state'>No data yet</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Col 2 Row 3: Activity Feed ──────────────────── -->
+  <div class="panel" id="panel-activity">
+    <div class="panel-header">
+      <span class="panel-title">Work Log</span>
+      <span class="panel-count" id="activity-count">20</span>
+      <div class="panel-spacer"></div>
+      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-activity', this.value, '.activity-row')">
+    </div>
+    <div class="panel-scroll">
+      <div id="activity-feed">
+        
+          <div class="activity-row" data-filter-text="08 38 2026-05-11">
+            <div class="activity-meta">
+              <span class="activity-date">May 11</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">08 38</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="11 33 2026-05-11">
+            <div class="activity-meta">
+              <span class="activity-date">May 11</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">11 33</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="00 39 2026-05-10">
+            <div class="activity-meta">
+              <span class="activity-date">May 10</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">00 39</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="00 43 2026-05-10">
+            <div class="activity-meta">
+              <span class="activity-date">May 10</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">00 43</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="08 38 2026-05-10">
+            <div class="activity-meta">
+              <span class="activity-date">May 10</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">08 38</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="08 53 2026-05-10">
+            <div class="activity-meta">
+              <span class="activity-date">May 10</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">08 53</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="08 55 2026-05-10">
+            <div class="activity-meta">
+              <span class="activity-date">May 10</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">08 55</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="09 00 2026-05-10">
+            <div class="activity-meta">
+              <span class="activity-date">May 10</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">09 00</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="09 04 2026-05-10">
+            <div class="activity-meta">
+              <span class="activity-date">May 10</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">09 04</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="09 16 2026-05-10">
+            <div class="activity-meta">
+              <span class="activity-date">May 10</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">09 16</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="09 18 2026-05-10">
+            <div class="activity-meta">
+              <span class="activity-date">May 10</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">09 18</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="08 30 2026-05-09">
+            <div class="activity-meta">
+              <span class="activity-date">May 9</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">08 30</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="08 38 2026-05-09">
+            <div class="activity-meta">
+              <span class="activity-date">May 9</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">08 38</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="08 43 2026-05-09">
+            <div class="activity-meta">
+              <span class="activity-date">May 9</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">08 43</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="13 20 2026-05-08">
+            <div class="activity-meta">
+              <span class="activity-date">May 8</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">13 20</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="13 28 2026-05-08">
+            <div class="activity-meta">
+              <span class="activity-date">May 8</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">13 28</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="13 49 2026-05-08">
+            <div class="activity-meta">
+              <span class="activity-date">May 8</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">13 49</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="14 12 2026-05-08">
+            <div class="activity-meta">
+              <span class="activity-date">May 8</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">14 12</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="14 13 2026-05-08">
+            <div class="activity-meta">
+              <span class="activity-date">May 8</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">14 13</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="14 48 2026-05-08">
+            <div class="activity-meta">
+              <span class="activity-date">May 8</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">14 48</div>
+            
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Col 3 Row 1: Stats ──────────────────────────── -->
+  <div class="panel" id="panel-stats">
+    <div class="panel-header">
+      <span class="panel-title">Stats</span>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card accent">
+        <div class="stat-val">0</div>
+        <div class="stat-label">Sessions</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-val">6</div>
+        <div class="stat-label">Active Days</div>
+      </div>
+      <div class="stat-card teal">
+        <div class="stat-val">0k</div>
+        <div class="stat-label">Input Tokens</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-val">0k</div>
+        <div class="stat-label">Output Tokens</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">63</div>
+        <div class="stat-label">Log Files</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">2</div>
+        <div class="stat-label">Skills</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Col 3 Row 2: Hooks ──────────────────────────── -->
+  <div class="panel" id="panel-hooks">
+    <div class="panel-header">
+      <span class="panel-title">Hooks</span>
+      <span class="panel-count">2</span>
+      <div class="panel-spacer"></div>
+      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-hooks', this.value, 'tr[data-filter-text]')">
+    </div>
+    <div class="panel-scroll">
+      <table class="data-table">
+        <thead><tr><th>Event</th><th>Command</th></tr></thead>
+        <tbody id="hooks-tbody">
+          
+          <tr data-filter-text="sessionstart {'hooks': [{'type': 'command', 'command': 'node "/users/i576292/.claude/hooks/caveman-activate.js"', 'timeout': 5, 'statusmessage': 'loading caveman mode...'}]}">
+            <td><span class="badge badge-event">SessionStart</span></td>
+            <td class="mono truncate">{'hooks': [{'type': 'command', 'command': 'node "/Users/I576292/.claude/hooks/ca</td>
+          </tr>
+          <tr data-filter-text="userpromptsubmit {'hooks': [{'type': 'command', 'command': 'node "/users/i576292/.claude/hooks/caveman-mode-tracker.js"', 'timeout': 5, 'statusmessage': 'tracking caveman mode...'}]}">
+            <td><span class="badge badge-event">UserPromptSubmit</span></td>
+            <td class="mono truncate">{'hooks': [{'type': 'command', 'command': 'node "/Users/I576292/.claude/hooks/ca</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─── Col 3 Row 3: Skills ─────────────────────────── -->
+  <div class="panel" id="panel-skills">
+    <div class="panel-header">
+      <span class="panel-title">Skills</span>
+      <span class="panel-count">2</span>
+    </div>
+    <div class="chips">
+      <span class="chip">publish</span><span class="chip">apply</span>
+    </div>
+  </div>
+
+</div><!-- /#dashboard -->
+
+<script>
+// ─── Charts ─────────────────────────────────────────────────────────────────
+const chartDefaults = {
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: '#242528',
+      titleColor: '#ececec',
+      bodyColor: '#8b8d94',
+      borderColor: '#3a3b3f',
+      borderWidth: 1,
+    }
+  },
+  scales: {
+    x: { ticks: { color: '#555760', font: { size: 9 } }, grid: { color: '#2d2e32' } },
+    y: { ticks: { color: '#555760', font: { size: 9 } }, grid: { color: '#2d2e32' }, beginAtZero: true }
+  }
+};
+
+new Chart(document.getElementById('chart-daily'), {
+  type: 'bar',
+  data: {
+    labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
+    datasets: [{
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 1051],
+      backgroundColor: 'rgba(217,119,87,0.5)',
+      borderColor: 'rgba(217,119,87,0.8)',
+      borderWidth: 1,
+      borderRadius: 2,
+    }]
+  },
+  options: { ...chartDefaults, animation: { duration: 400 } }
+});
+
+new Chart(document.getElementById('chart-hourly'), {
+  type: 'line',
+  data: {
+    labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
+    datasets: [{
+      data: [0, 710, 165, 2803, 537, 2791, 2567, 1887, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      borderColor: '#8b7cf6',
+      backgroundColor: 'rgba(139,124,246,0.1)',
+      borderWidth: 2,
+      pointRadius: 2,
+      pointBackgroundColor: '#8b7cf6',
+      fill: true,
+      tension: 0.4,
+    }]
+  },
+  options: { ...chartDefaults, animation: { duration: 400 } }
+});
+
+// ─── Filter ──────────────────────────────────────────────────────────────────
+function filterPanel(panelId, query, selector) {
+  const panel = document.getElementById(panelId);
+  const items = panel.querySelectorAll(selector);
+  const q = query.toLowerCase().trim();
+  let shown = 0;
+  items.forEach(el => {
+    const text = el.getAttribute('data-filter-text') || el.textContent;
+    const match = !q || text.toLowerCase().includes(q);
+    el.classList.toggle('hidden', !match);
+    if (match) shown++;
+  });
+  // update count badge if present
+  const countEl = panel.querySelector('.panel-count');
+  if (countEl) countEl.textContent = q ? shown : items.length;
+}
+
+// ─── Global search ───────────────────────────────────────────────────────────
+function globalSearch(query) {
+  const q = query.toLowerCase().trim();
+  // Apply to all filterable panels
+  filterPanel('panel-mcps', q, '.mcp-card');
+  filterPanel('panel-hooks', q, 'tr[data-filter-text]');
+  filterPanel('panel-activity', q, '.activity-row');
+}
+
+// ─── Keyboard shortcut ───────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('global-search').focus();
+    document.getElementById('global-search').select();
+  }
+  if (e.key === 'Escape') {
+    const gs = document.getElementById('global-search');
+    gs.value = '';
+    globalSearch('');
+    gs.blur();
+  }
+});
+</script>
+</body>
+</html>
