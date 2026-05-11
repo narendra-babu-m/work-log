@@ -96,10 +96,18 @@ body {
   top: 48px; left: 0; right: 0; bottom: 180px;
   display: grid;
   grid-template-columns: var(--col1, 280px) 1fr var(--col3, 300px);
-  grid-template-rows: var(--row1, 120px) 1fr 1fr;
   gap: 1px;
   background: var(--border);
   overflow: hidden;
+}
+
+/* Each column is an independent flex container */
+.col-wrap {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  min-width: 0;
 }
 
 /* ─── Resize handles ─────────────────────────────────── */
@@ -118,11 +126,16 @@ body {
   cursor: col-resize;
   transform: translateX(-4px);
 }
+/* Row handles sit inside col-wrap, between panels — relative positioning */
 .resize-handle.row-handle {
+  position: relative;
   left: 0; right: 0;
-  height: 8px;
+  width: 100%;
+  height: 5px;
   cursor: row-resize;
-  transform: translateY(-4px);
+  transform: none;
+  flex-shrink: 0;
+  z-index: 200;
 }
 
 /* ─── Cheatsheet footer ───────────────────────────────── */
@@ -240,39 +253,22 @@ body {
 .panel-filter:focus { border-color: var(--accent); }
 .panel-filter::placeholder { color: var(--text-faint); }
 
-/* col-wrap: transparent to CSS grid at desktop, becomes column container on mobile */
-.col-wrap { display: contents; }
-
 /* ─── Grid Areas ─────────────────────────────────────── */
-/* Col 1: Sprint (top) → MCPs → Skills (bottom) */
-#panel-sprint {
-  grid-column: 1; grid-row: 1;
-}
-#panel-mcps {
-  grid-column: 1; grid-row: 2 / 3;
-}
-#panel-skills {
-  grid-column: 1; grid-row: 3;
-}
+/* Panels use flex sizing within their col-wrap.
+   Default heights set here; JS overrides with per-column stored values. */
+/* Col 1 */
+#panel-sprint  { flex: 0 0 var(--c1r0, 120px); }
+#panel-mcps    { flex: 1 1 0; }         /* fills remaining */
+#panel-skills  { flex: 0 0 var(--c1r1, 200px); }
 
-/* Col 2: Stats row (top) → Charts fill remaining */
-#panel-stats {
-  grid-column: 2; grid-row: 1;
-}
-#panel-charts {
-  grid-column: 2; grid-row: 2 / 4;
-}
+/* Col 2 */
+#panel-stats   { flex: 0 0 var(--c2r0, 120px); }
+#panel-charts  { flex: 1 1 0; }
 
-/* Col 3: Hooks (top) → Prompts (mid) → Plugins (bottom) */
-#panel-hooks {
-  grid-column: 3; grid-row: 1;
-}
-#panel-prompts {
-  grid-column: 3; grid-row: 2;
-}
-#panel-plugins {
-  grid-column: 3; grid-row: 3;
-}
+/* Col 3 */
+#panel-hooks   { flex: 0 0 var(--c3r0, 160px); }
+#panel-prompts { flex: 1 1 0; }
+#panel-plugins { flex: 0 0 var(--c3r1, 180px); }
 
 /* ─── Stat Cards ─────────────────────────────────────── */
 .stat-grid {
@@ -621,14 +617,13 @@ body {
   #header .subtitle, #header .timestamp { display: none; }
   #header #global-search { width: 100%; order: 10; }
   #footer-cheatsheet { display: none; }
-  .resize-handle { display: none; }
+  .resize-handle.col-handle { display: none; }
 
-  /* Dashboard: 3 equal columns side by side, full remaining height */
+  /* Dashboard: 3 equal columns side by side */
   #dashboard {
     position: fixed;
     top: auto; bottom: 0;
     left: 0; right: 0;
-    /* height = viewport minus header (approx 80px with wrapped search) */
     height: calc(100dvh - 80px);
     display: flex;
     flex-direction: row;
@@ -636,29 +631,21 @@ body {
     background: var(--border);
     gap: 1px;
     grid-template-columns: unset;
-    grid-template-rows: unset;
   }
 
-  /* Each column: fixed-width (1/3), full height, scroll internally */
+  /* Each column scrolls independently — override JS-set heights */
   .col-wrap {
-    flex: 1 1 0;
+    flex: 1 1 0 !important;
     min-width: 0;
-    height: 100%;
+    height: 100% !important;
     overflow-y: auto;
     overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    background: var(--bg);
-    scrollbar-width: thin;
-    scrollbar-color: var(--border2) transparent;
   }
-
-  /* Panels inside columns: natural height, no fixed rows */
+  /* Panels inside: natural height, row handles hidden */
   .panel {
-    overflow: visible;
-    height: auto;
-    flex-shrink: 0;
-    border-bottom: 1px solid var(--border);
+    flex: none !important;
+    height: auto !important;
+    min-height: unset !important;
   }
   .panel-scroll {
     overflow: visible;
@@ -666,23 +653,15 @@ body {
     height: auto;
     max-height: none;
   }
-  #panel-stats, #panel-charts,
-  #panel-mcps, #panel-skills,
-  #panel-hooks, #panel-prompts, #panel-plugins {
-    grid-column: unset; grid-row: unset;
-  }
+  .resize-handle.row-handle { display: none; }
 
-  /* Stats: 2 columns (tighter in narrow col) */
+  /* Stats: 2 columns */
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
-  /* Charts: stack vertically */
   .charts-row { grid-template-columns: 1fr; }
-  /* Insight cards: single column */
   .insight-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 500px) {
-  /* On very small phones, let columns scroll horizontally too */
-  #dashboard { gap: 0; }
   .col-wrap { min-width: 280px; }
 }
 
@@ -858,7 +837,7 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 15:00</span>
+  <span class="timestamp">Generated 2026-05-11 15:06</span>
   <button class="refresh-btn" onclick="resetLayout()" title="Reset panel sizes to default" style="margin-right:4px">⊞ Reset</button>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
@@ -868,31 +847,32 @@ body {
 
   <!-- ─── Col 1 ────────────────────────────────────────── -->
   <div class="col-wrap" id="col-1">
-  <div class="panel" id="panel-sprint">
-    <div class="panel-header" data-collapsible>
-      <span class="panel-title">Current Sprint</span>
-    </div>
-    <div class="panel-scroll">
-      
+    <!-- Sprint -->
+    <div class="panel" id="panel-sprint">
+      <div class="panel-header" data-collapsible>
+        <span class="panel-title">Current Sprint</span>
+      </div>
+      <div class="panel-scroll">
+        
         <div class="sprint-goal">[One-line sprint goal]</div>
         <div class="sprint-meta">YYYY-MM-DD → YYYY-MM-DD</div>
         <div class="progress-wrap">
           <div class="progress-bar" style="width:0%"></div>
         </div>
         <div class="progress-label">0% complete</div>
+      </div>
     </div>
-  </div>
-
-  <!-- ─── Col 1: MCPs ──────────────────────────────────── -->
-  <div class="panel" id="panel-mcps">
-    <div class="panel-header" data-collapsible>
-      <span class="panel-title">MCP Servers</span>
-      <span class="panel-count" id="mcp-count">4</span>
-      <div class="panel-spacer"></div>
-      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-mcps', this.value, '.mcp-card')">
-    </div>
-    <div class="panel-scroll">
-      
+    <div class="resize-handle row-handle" data-col="1" data-idx="0"></div>
+    <!-- MCPs -->
+    <div class="panel" id="panel-mcps">
+      <div class="panel-header" data-collapsible>
+        <span class="panel-title">MCP Servers</span>
+        <span class="panel-count" id="mcp-count">4</span>
+        <div class="panel-spacer"></div>
+        <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-mcps', this.value, '.mcp-card')">
+      </div>
+      <div class="panel-scroll">
+        
         <div class="card mcp-card" data-filter-text="dm-pod2-mcp sap dmc pod 2.0 design info & api reference" onclick="showMcpModal('dm-pod2-mcp')">
           <div class="card-icon">⬡</div>
           <div class="card-body">
@@ -925,19 +905,19 @@ body {
           </div>
           <div class="card-badge active">active</div>
         </div>
+      </div>
     </div>
-  </div>
-
-  <!-- ─── Col 1: Skills ────────────────────────────────── -->
-  <div class="panel" id="panel-skills">
-    <div class="panel-header" data-collapsible>
-      <span class="panel-title">Skills</span>
-      <span class="panel-count">24</span>
-      <div class="panel-spacer"></div>
-      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-skills', this.value, '.skill-row')">
-    </div>
-    <div class="panel-scroll">
-      <div class="skill-cat-header" style="color:#d97757">Workflow <span class="skill-cat-count">5</span></div><div class="skill-row" data-filter-text="brainstorming you must use this before any creative work - creating features, building components, adding function workflow" onclick="showSkillModal(10)">
+    <div class="resize-handle row-handle" data-col="1" data-idx="1"></div>
+    <!-- Skills -->
+    <div class="panel" id="panel-skills">
+      <div class="panel-header" data-collapsible>
+        <span class="panel-title">Skills</span>
+        <span class="panel-count">24</span>
+        <div class="panel-spacer"></div>
+        <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-skills', this.value, '.skill-row')">
+      </div>
+      <div class="panel-scroll">
+        <div class="skill-cat-header" style="color:#d97757">Workflow <span class="skill-cat-count">5</span></div><div class="skill-row" data-filter-text="brainstorming you must use this before any creative work - creating features, building components, adding function workflow" onclick="showSkillModal(10)">
   <span class="skill-name">/brainstorming</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="executing-plans use when you have a written implementation plan to execute in a separate session with review checkpo workflow" onclick="showSkillModal(12)">
   <span class="skill-name">/executing-plans</span><span class="skill-src skill-src-superpowers">superpowers</span>
@@ -986,123 +966,115 @@ body {
 </div><div class="skill-row" data-filter-text="publish  workspace" onclick="showSkillModal(1)">
   <span class="skill-name">/publish</span>
 </div>
+      </div>
     </div>
-  </div>
-
   </div><!-- /#col-1 -->
 
   <!-- ─── Col 2 ────────────────────────────────────────── -->
   <div class="col-wrap" id="col-2">
-
-  <!-- ─── Col 2: Stats row ─────────────────────────────── -->
-  <div class="panel" id="panel-stats">
-    <div class="panel-header" data-collapsible>
-      <span class="panel-title">Stats</span>
+    <!-- Stats -->
+    <div class="panel" id="panel-stats">
+      <div class="panel-header" data-collapsible>
+        <span class="panel-title">Stats</span>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card accent">
+          <div class="stat-val">0</div>
+          <div class="stat-label">Sessions</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-val">20</div>
+          <div class="stat-label">Active Days (30d)</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-val">6839k</div>
+          <div class="stat-label">Input Tokens</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-val">7240k</div>
+          <div class="stat-label">Output Tokens</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-val">3340</div>
+          <div class="stat-label">Today</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-val">99%</div>
+          <div class="stat-label">Cache ROI</div>
+        </div>
+      </div>
     </div>
-    <div class="stat-grid">
-      <div class="stat-card accent">
-        <div class="stat-val">0</div>
-        <div class="stat-label">Sessions</div>
+    <div class="resize-handle row-handle" data-col="2" data-idx="0"></div>
+    <!-- Charts -->
+    <div class="panel" id="panel-charts">
+      <div class="panel-header" data-collapsible>
+        <span class="panel-title">Activity</span>
       </div>
-      <div class="stat-card purple">
-        <div class="stat-val">20</div>
-        <div class="stat-label">Active Days (30d)</div>
-      </div>
-      <div class="stat-card teal">
-        <div class="stat-val">6839k</div>
-        <div class="stat-label">Input Tokens</div>
-      </div>
-      <div class="stat-card green">
-        <div class="stat-val">7224k</div>
-        <div class="stat-label">Output Tokens</div>
-      </div>
-      <div class="stat-card accent">
-        <div class="stat-val">3232</div>
-        <div class="stat-label">Today</div>
-      </div>
-      <div class="stat-card teal">
-        <div class="stat-val">99%</div>
-        <div class="stat-label">Cache ROI</div>
+      <div class="panel-scroll">
+        <div class="chart-wrap">
+          <div class="charts-row">
+            <div>
+              <div class="chart-title">Last 30 Days</div>
+              <canvas id="chart-daily" height="130"></canvas>
+            </div>
+            <div>
+              <div class="chart-title">By Hour of Day</div>
+              <canvas id="chart-hourly" height="130"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="insight-grid">
+          <div class="insight-card">
+            <div class="insight-icon">📈</div>
+            <div class="insight-body">
+              <div class="insight-val">12964</div>
+              <div class="insight-label">Peak day (05-08)</div>
+            </div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-icon">⚡</div>
+            <div class="insight-body">
+              <div class="insight-val">3034</div>
+              <div class="insight-label">Avg events / active day</div>
+            </div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-icon">💾</div>
+            <div class="insight-body">
+              <div class="insight-val">1258412k</div>
+              <div class="insight-label">Cache tokens read (99% ROI)</div>
+            </div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-icon">📁</div>
+            <div class="insight-body">
+              <div class="insight-val insight-val-sm">professional</div>
+              <div class="insight-label">Most active project</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- ─── Col 2: Charts ────────────────────────────────── -->
-  <div class="panel" id="panel-charts">
-    <div class="panel-header" data-collapsible>
-      <span class="panel-title">Activity</span>
-    </div>
-    <div class="panel-scroll">
-      <div class="chart-wrap">
-        <div class="charts-row">
-          <div>
-            <div class="chart-title">Last 30 Days</div>
-            <canvas id="chart-daily" height="130"></canvas>
-          </div>
-          <div>
-            <div class="chart-title">By Hour of Day</div>
-            <canvas id="chart-hourly" height="130"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- Insight cards row -->
-      <div class="insight-grid">
-        <div class="insight-card">
-          <div class="insight-icon">📈</div>
-          <div class="insight-body">
-            <div class="insight-val">12964</div>
-            <div class="insight-label">Peak day (05-08)</div>
-          </div>
-        </div>
-        <div class="insight-card">
-          <div class="insight-icon">⚡</div>
-          <div class="insight-body">
-            <div class="insight-val">3028</div>
-            <div class="insight-label">Avg events / active day</div>
-          </div>
-        </div>
-        <div class="insight-card">
-          <div class="insight-icon">💾</div>
-          <div class="insight-body">
-            <div class="insight-val">1253552k</div>
-            <div class="insight-label">Cache tokens read (99% ROI)</div>
-          </div>
-        </div>
-        <div class="insight-card">
-          <div class="insight-icon">📁</div>
-          <div class="insight-body">
-            <div class="insight-val insight-val-sm">professional</div>
-            <div class="insight-label">Most active project</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Model usage moved to right panel (Hooks header) -->
-    </div>
-  </div>
-
   </div><!-- /#col-2 -->
 
   <!-- ─── Col 3 ────────────────────────────────────────── -->
   <div class="col-wrap" id="col-3">
-
-  <!-- ─── Col 3: Hooks ─────────────────────────────────── -->
-  <div class="panel" id="panel-hooks">
-    <div class="panel-header" data-collapsible>
-      <span class="panel-title">Models Used</span>
-    </div>
-    <div class="model-mini-wrap">
-      <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">18,912</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
-    </div>
-    <div class="panel-header" data-collapsible style="border-top:1px solid var(--border)">
-      <span class="panel-title">Hooks</span>
-      <span class="panel-count">4 active / 7</span>
-      <div class="panel-spacer"></div>
-      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-hooks', this.value, '.hook-row')">
-    </div>
-    <div class="panel-scroll" style="padding:6px 14px">
-      
+    <!-- Hooks (includes Models Used at top) -->
+    <div class="panel" id="panel-hooks">
+      <div class="panel-header" data-collapsible>
+        <span class="panel-title">Models Used</span>
+      </div>
+      <div class="model-mini-wrap">
+        <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">18,949</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
+      </div>
+      <div class="panel-header" data-collapsible style="border-top:1px solid var(--border)">
+        <span class="panel-title">Hooks</span>
+        <span class="panel-count">4 active / 7</span>
+        <div class="panel-spacer"></div>
+        <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-hooks', this.value, '.hook-row')">
+      </div>
+      <div class="panel-scroll" style="padding:6px 14px">
+        
           <div class="hook-row hook-active" data-filter-text="sessionstart caveman-activate.js" onclick="showHookModal(0)">
             <div class="hook-event-wrap">
               <span class="hook-dot active"></span>
@@ -1159,19 +1131,26 @@ body {
             </div>
             <span class="hook-script inactive">—</span>
           </div>
+      </div>
     </div>
-  </div>
-
-  <!-- ─── Col 3: Recent Prompts ─────────────────────────── -->
-  <div class="panel" id="panel-prompts">
-    <div class="panel-header" data-collapsible>
-      <span class="panel-title">Recent Prompts</span>
-      <span class="panel-count">20</span>
-      <div class="panel-spacer"></div>
-      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-prompts', this.value, '.prompt-row')">
-    </div>
-    <div class="panel-scroll" style="padding:10px 14px">
-      
+    <div class="resize-handle row-handle" data-col="3" data-idx="0"></div>
+    <!-- Recent Prompts -->
+    <div class="panel" id="panel-prompts">
+      <div class="panel-header" data-collapsible>
+        <span class="panel-title">Recent Prompts</span>
+        <span class="panel-count">20</span>
+        <div class="panel-spacer"></div>
+        <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-prompts', this.value, '.prompt-row')">
+      </div>
+      <div class="panel-scroll" style="padding:10px 14px">
+        
+          <div class="prompt-row" data-filter-text="skills and plugins are getting adjusted together, mcp activity recent prompts are getting adjusted together i want every claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 15:02</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Skills and plugins are getting adjusted together, mcp activity recent prompts are getting adjusted together I want every</div>
+          </div>
           <div class="prompt-row" data-filter-text="i don't like this responsive view where if cursor is used to increase or decrease the height, all headers mcp servers, a claude-professional">
             <div class="prompt-meta">
               <span class="prompt-time">05-11 14:58</span>
@@ -1307,26 +1286,19 @@ the place isn't enough</div>
             </div>
             <div class="prompt-text">Also incorporate the claude cheat sheet within the given areas, research and generates ideas on how to do it, be cohesiv</div>
           </div>
-          <div class="prompt-row" data-filter-text="previos claude code repisitory had 21 skills and ~/claude-professional, but the current on shows only 2 claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 11:59</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">previos claude code repisitory had 21 skills and ~/claude-professional, but the current on shows only 2</div>
-          </div>
+      </div>
     </div>
-  </div>
-
-  <!-- ─── Col 3: Plugins ────────────────────────────────── -->
-  <div class="panel" id="panel-plugins">
-    <div class="panel-header" data-collapsible>
-      <span class="panel-title">Plugins</span>
-      <span class="panel-count">6</span>
-      <div class="panel-spacer"></div>
-      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-plugins', this.value, '.plugin-card')">
-    </div>
-    <div class="panel-scroll" style="padding:8px 12px">
-      
+    <div class="resize-handle row-handle" data-col="3" data-idx="1"></div>
+    <!-- Plugins -->
+    <div class="panel" id="panel-plugins">
+      <div class="panel-header" data-collapsible>
+        <span class="panel-title">Plugins</span>
+        <span class="panel-count">6</span>
+        <div class="panel-spacer"></div>
+        <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-plugins', this.value, '.plugin-card')">
+      </div>
+      <div class="panel-scroll" style="padding:8px 12px">
+        
           <div class="plugin-card" data-filter-text="caveman global user" onclick="showPluginModal(0)">
             <div class="plugin-name">caveman</div>
             <span class="badge badge-event">user</span>
@@ -1351,16 +1323,13 @@ the place isn't enough</div>
             <div class="plugin-name">warp</div>
             <span class="badge badge-event">user</span>
           </div>
+      </div>
     </div>
-  </div>
-
   </div><!-- /#col-3 -->
 
-  <!-- Resize handles (positioned by JS) -->
+  <!-- Col resize handles (positioned by JS) -->
   <div class="resize-handle col-handle" id="handle-col1" title="Drag to resize column"></div>
   <div class="resize-handle col-handle" id="handle-col3" title="Drag to resize column"></div>
-  <div class="resize-handle row-handle" id="handle-row1" title="Drag to resize row"></div>
-  <div class="resize-handle row-handle" id="handle-row2" title="Drag to resize row"></div>
 
 </div><!-- /#dashboard -->
 
@@ -1438,7 +1407,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3232],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3340],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -1453,7 +1422,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 3904, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 4012, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
@@ -1622,187 +1591,178 @@ function showCsModal(idx) {
 
 // ─── Grid Resize Engine ──────────────────────────────────────────────────────
 (function() {
-  const STORAGE_KEY = 'claude-os-layout-v1';
+  const STORAGE_KEY = 'claude-os-layout-v2';
   const MIN_COL = 180;
-  const MIN_ROW = 80;
+  const MIN_PANEL = 60;
   const dash = document.getElementById('dashboard');
 
   // ── Defaults ──────────────────────────────────────────────────────────────
-  const defaults = { col1: 280, col3: 300, row1: 120, row2: null };
+  // rows[colId] = array of pixel heights for panels 0..N-2 (last panel fills)
+  const defaults = {
+    col1: 280, col3: 300,
+    rows: { '1': [120, 200], '2': [130], '3': [200, null] }
+  };
 
-  // ── Load saved layout ──────────────────────────────────────────────────────
+  // ── Load / Save ────────────────────────────────────────────────────────────
   function loadLayout() {
     try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-      return saved || { ...defaults };
-    } catch(e) {
-      return { ...defaults };
-    }
+      const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+      return s || JSON.parse(JSON.stringify(defaults));
+    } catch { return JSON.parse(JSON.stringify(defaults)); }
+  }
+  function saveLayout() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(layout)); } catch {}
   }
 
-  function saveLayout(layout) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(layout)); } catch(e) {}
-  }
-
-  // ── Apply layout to grid ───────────────────────────────────────────────────
   let layout = loadLayout();
 
-  function applyLayout() {
+  // ── Apply column widths ────────────────────────────────────────────────────
+  function applyColWidths() {
     const w = dash.offsetWidth;
-    const h = dash.offsetHeight;
-    const col1 = Math.max(MIN_COL, Math.min(layout.col1, w - MIN_COL - MIN_COL));
+    const col1 = Math.max(MIN_COL, Math.min(layout.col1, w - MIN_COL * 2));
     const col3 = Math.max(MIN_COL, Math.min(layout.col3, w - col1 - MIN_COL));
-    // row2 is a fraction of remaining height after row1
-    const row1 = Math.max(MIN_ROW, Math.min(layout.row1, h - MIN_ROW * 2));
-    const row2 = layout.row2 !== null
-      ? Math.max(MIN_ROW, Math.min(layout.row2, h - row1 - MIN_ROW))
-      : null;
-
-    dash.style.setProperty('--col1', col1 + 'px');
-    dash.style.setProperty('--col3', col3 + 'px');
-    dash.style.setProperty('--row1', row1 + 'px');
-    // grid-template-rows: row1 1fr 1fr — let row2/3 split remaining equally
-    // If row2 explicitly set: row1 row2 1fr
-    if (row2 !== null) {
-      dash.style.gridTemplateRows = row1 + 'px ' + row2 + 'px 1fr';
-    } else {
-      dash.style.gridTemplateRows = row1 + 'px 1fr 1fr';
-    }
     dash.style.gridTemplateColumns = col1 + 'px 1fr ' + col3 + 'px';
-    positionHandles();
+    positionColHandles(col1, col3);
   }
 
-  // ── Position handles over grid gap lines ───────────────────────────────────
-  function positionHandles() {
-    const rect = dash.getBoundingClientRect();
-    // Read computed column/row sizes from grid
-    const computed = window.getComputedStyle(dash);
-    const cols = computed.gridTemplateColumns.split(' ').map(parseFloat);
-    const rows = computed.gridTemplateRows.split(' ').map(parseFloat);
+  // ── Apply per-column panel heights ─────────────────────────────────────────
+  // For a col with N panels: panels 0..N-2 get fixed height, panel N-1 gets flex:1
+  const COL_PANELS = {
+    '1': ['panel-sprint', 'panel-mcps', 'panel-skills'],
+    '2': ['panel-stats', 'panel-charts'],
+    '3': ['panel-hooks', 'panel-prompts', 'panel-plugins'],
+  };
 
-    const gap = 1;
-    // col1 handle: after first column
-    const hcol1 = document.getElementById('handle-col1');
-    if (hcol1 && cols.length >= 1) {
-      hcol1.style.left = (cols[0] + gap / 2) + 'px';
-      hcol1.style.top = '0';
-      hcol1.style.bottom = '0';
-      hcol1.style.width = '8px';
-    }
-    // col3 handle: after second column (before col3)
-    const hcol3 = document.getElementById('handle-col3');
-    if (hcol3 && cols.length >= 2) {
-      const x = cols[0] + gap + cols[1] + gap / 2;
-      hcol3.style.left = x + 'px';
-      hcol3.style.top = '0';
-      hcol3.style.bottom = '0';
-      hcol3.style.width = '8px';
-    }
-    // row1 handle: after first row
-    const hrow1 = document.getElementById('handle-row1');
-    if (hrow1 && rows.length >= 1) {
-      hrow1.style.top = (rows[0] + gap / 2) + 'px';
-      hrow1.style.left = '0';
-      hrow1.style.right = '0';
-      hrow1.style.height = '8px';
-    }
-    // row2 handle: after second row
-    const hrow2 = document.getElementById('handle-row2');
-    if (hrow2 && rows.length >= 2) {
-      const y = rows[0] + gap + rows[1] + gap / 2;
-      hrow2.style.top = y + 'px';
-      hrow2.style.left = '0';
-      hrow2.style.right = '0';
-      hrow2.style.height = '8px';
-    }
-  }
+  function applyColRows(colId) {
+    const panelIds = COL_PANELS[colId];
+    const heights = (layout.rows[colId] || []);
+    const colEl = document.getElementById('col-' + colId);
+    if (!colEl) return;
+    const colH = colEl.offsetHeight;
 
-  // ── Drag logic ─────────────────────────────────────────────────────────────
-  function makeDraggable(handle, axis, onDrag) {
-    let startX, startY, startVal;
-
-    handle.addEventListener('mousedown', e => {
-      e.preventDefault();
-      handle.classList.add('dragging');
-      startX = e.clientX;
-      startY = e.clientY;
-      startVal = onDrag.getStart();
-
-      function onMove(e) {
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        onDrag.move(axis === 'col' ? dx : dy, startVal);
+    panelIds.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (i === panelIds.length - 1) {
+        // Last panel fills remaining space
+        el.style.flex = '1 1 0';
+        el.style.minHeight = MIN_PANEL + 'px';
+        el.style.height = '';
+      } else {
+        const h = heights[i] != null
+          ? Math.max(MIN_PANEL, Math.min(heights[i], colH - MIN_PANEL))
+          : null;
+        if (h !== null) {
+          el.style.flex = '0 0 ' + h + 'px';
+          el.style.height = h + 'px';
+        }
       }
-      function onUp() {
-        handle.classList.remove('dragging');
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-        saveLayout(layout);
-      }
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
     });
   }
 
-  makeDraggable(document.getElementById('handle-col1'), 'col', {
-    getStart: () => layout.col1,
-    move: (d, start) => {
-      layout.col1 = Math.max(MIN_COL, start + d);
-      applyLayout();
+  function applyLayout() {
+    applyColWidths();
+    ['1','2','3'].forEach(applyColRows);
+  }
+
+  // ── Col handle positioning ─────────────────────────────────────────────────
+  function positionColHandles(col1, col3) {
+    const rect = dash.getBoundingClientRect();
+    const gap = 1;
+    const h1 = document.getElementById('handle-col1');
+    if (h1) {
+      h1.style.left = (col1 + gap / 2) + 'px';
+      h1.style.top = '0'; h1.style.bottom = '0'; h1.style.width = '8px';
     }
-  });
-
-  makeDraggable(document.getElementById('handle-col3'), 'col', {
-    getStart: () => layout.col3,
-    move: (d, start) => {
-      // col3 handle moves right → col3 shrinks
-      layout.col3 = Math.max(MIN_COL, start - d);
-      applyLayout();
+    const computed = window.getComputedStyle(dash);
+    const cols = computed.gridTemplateColumns.split(' ').map(parseFloat);
+    const h3 = document.getElementById('handle-col3');
+    if (h3 && cols.length >= 2) {
+      const x = cols[0] + gap + cols[1] + gap / 2;
+      h3.style.left = x + 'px';
+      h3.style.top = '0'; h3.style.bottom = '0'; h3.style.width = '8px';
     }
+  }
+
+  // ── Drag helper ────────────────────────────────────────────────────────────
+  function makeDraggable(el, axis, onMove) {
+    el.addEventListener('mousedown', e => {
+      if (e.target.closest('input')) return;
+      e.preventDefault();
+      el.classList.add('dragging');
+      const startX = e.clientX, startY = e.clientY;
+      const startVal = onMove.getStart();
+
+      function move(e) {
+        onMove.drag(axis === 'col' ? e.clientX - startX : e.clientY - startY, startVal);
+      }
+      function up() {
+        el.classList.remove('dragging');
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up);
+        saveLayout();
+      }
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up);
+    });
+  }
+
+  // ── Col handles ───────────────────────────────────────────────────────────
+  const hcol1 = document.getElementById('handle-col1');
+  const hcol3 = document.getElementById('handle-col3');
+
+  if (hcol1) {
+    makeDraggable(hcol1, 'col', {
+      getStart: () => layout.col1,
+      drag: (d, start) => { layout.col1 = Math.max(MIN_COL, start + d); applyLayout(); },
+    });
+    hcol1.addEventListener('dblclick', () => {
+      layout.col1 = defaults.col1; applyLayout(); saveLayout();
+    });
+  }
+  if (hcol3) {
+    makeDraggable(hcol3, 'col', {
+      getStart: () => layout.col3,
+      drag: (d, start) => { layout.col3 = Math.max(MIN_COL, start - d); applyLayout(); },
+    });
+    hcol3.addEventListener('dblclick', () => {
+      layout.col3 = defaults.col3; applyLayout(); saveLayout();
+    });
+  }
+
+  // ── Per-column row handles ─────────────────────────────────────────────────
+  document.querySelectorAll('.resize-handle.row-handle[data-col]').forEach(handle => {
+    const colId = handle.getAttribute('data-col');
+    const idx   = parseInt(handle.getAttribute('data-idx'), 10);
+
+    makeDraggable(handle, 'row', {
+      getStart: () => {
+        // Measure current rendered height of the panel above this handle
+        const panelId = COL_PANELS[colId][idx];
+        const el = document.getElementById(panelId);
+        return el ? el.offsetHeight : 120;
+      },
+      drag: (dy, startH) => {
+        if (!layout.rows[colId]) layout.rows[colId] = [];
+        layout.rows[colId][idx] = Math.max(MIN_PANEL, startH + dy);
+        applyColRows(colId);
+      },
+    });
+
+    handle.addEventListener('dblclick', () => {
+      if (layout.rows[colId]) layout.rows[colId][idx] = defaults.rows[colId]?.[idx] ?? null;
+      applyColRows(colId);
+      saveLayout();
+    });
   });
 
-  makeDraggable(document.getElementById('handle-row1'), 'row', {
-    getStart: () => layout.row1,
-    move: (d, start) => {
-      layout.row1 = Math.max(MIN_ROW, start + d);
-      applyLayout();
-    }
-  });
-
-  makeDraggable(document.getElementById('handle-row2'), 'row', {
-    getStart: () => {
-      const computed = window.getComputedStyle(dash);
-      const rows = computed.gridTemplateRows.split(' ').map(parseFloat);
-      return rows[1] || 200;
-    },
-    move: (d, start) => {
-      layout.row2 = Math.max(MIN_ROW, start + d);
-      applyLayout();
-    }
-  });
-
-  // Double-click handle → reset that axis to default
-  document.getElementById('handle-col1').addEventListener('dblclick', () => {
-    layout.col1 = defaults.col1; applyLayout(); saveLayout(layout);
-  });
-  document.getElementById('handle-col3').addEventListener('dblclick', () => {
-    layout.col3 = defaults.col3; applyLayout(); saveLayout(layout);
-  });
-  document.getElementById('handle-row1').addEventListener('dblclick', () => {
-    layout.row1 = defaults.row1; layout.row2 = null; applyLayout(); saveLayout(layout);
-  });
-  document.getElementById('handle-row2').addEventListener('dblclick', () => {
-    layout.row2 = null; applyLayout(); saveLayout(layout);
-  });
-
-  // ── Init + resize observer ─────────────────────────────────────────────────
+  // ── Init ───────────────────────────────────────────────────────────────────
   applyLayout();
   window.addEventListener('resize', applyLayout);
 
-  // Expose reset for button
   window.resetLayout = function() {
-    layout = { ...defaults };
-    saveLayout(layout);
+    layout = JSON.parse(JSON.stringify(defaults));
+    saveLayout();
     applyLayout();
   };
 })();
