@@ -582,6 +582,59 @@ body {
   text-overflow: ellipsis;
 }
 
+/* ─── Responsive ─────────────────────────────────────── */
+@media (max-width: 900px) {
+  /* Switch from fixed layout to normal document flow */
+  body { overflow: auto; }
+  #header {
+    position: relative;
+    top: auto; left: auto; right: auto;
+    height: auto; min-height: 48px;
+    flex-wrap: wrap;
+    gap: 8px; padding: 10px 14px;
+  }
+  #header .subtitle, #header .timestamp { display: none; }
+  #header #global-search { width: 100%; order: 10; }
+  #footer-cheatsheet { display: none; }
+  #dashboard {
+    position: relative;
+    top: auto; left: auto; right: auto; bottom: auto;
+    height: auto;
+    display: flex; flex-direction: column;
+    overflow: visible;
+    background: transparent;
+    gap: 1px;
+  }
+  .resize-handle { display: none; }
+  /* All panels: auto height, full width, unclipped */
+  .panel {
+    overflow: visible;
+    height: auto;
+  }
+  #panel-stats, #panel-charts,
+  #panel-mcps, #panel-skills,
+  #panel-hooks, #panel-prompts, #panel-plugins {
+    grid-column: auto; grid-row: auto;
+    min-height: unset;
+    max-height: none;
+  }
+  /* Uncap scroll areas so content shows fully */
+  .panel-scroll {
+    overflow: visible;
+    flex: none;
+    max-height: none;
+    height: auto;
+  }
+  /* Stats: 3 columns */
+  .stat-grid { grid-template-columns: repeat(3, 1fr); }
+  /* Charts: stack vertically */
+  .charts-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 500px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* ─── Utilities ──────────────────────────────────────── */
 .mono { font-family: var(--mono); }
 .truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 200px; }
@@ -711,7 +764,7 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 14:34</span>
+  <span class="timestamp">Generated 2026-05-11 14:38</span>
   <button class="refresh-btn" onclick="resetLayout()" title="Reset panel sizes to default" style="margin-right:4px">⊞ Reset</button>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
@@ -860,11 +913,11 @@ body {
         <div class="stat-label">Input Tokens</div>
       </div>
       <div class="stat-card green">
-        <div class="stat-val">7192k</div>
+        <div class="stat-val">7197k</div>
         <div class="stat-label">Output Tokens</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val">75</div>
+        <div class="stat-val">76</div>
         <div class="stat-label">Log Files</div>
       </div>
       <div class="stat-card">
@@ -896,7 +949,7 @@ body {
         <div class="chart-title">Top Models Used</div>
         <table class="data-table">
           <thead><tr><th>Model</th><th>Events</th></tr></thead>
-          <tbody><tr><td class='mono'>sonnet-4-6</td><td>18,738</td></tr><tr><td class='mono'>haiku-4-5-20251001</td><td>1,653</td></tr><tr><td class='mono'>opus-4-6</td><td>96</td></tr><tr><td class='mono'><synthetic></td><td>20</td></tr></tbody>
+          <tbody><tr><td class='mono'>sonnet-4-6</td><td>18,774</td></tr><tr><td class='mono'>haiku-4-5-20251001</td><td>1,653</td></tr><tr><td class='mono'>opus-4-6</td><td>96</td></tr><tr><td class='mono'><synthetic></td><td>20</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -974,6 +1027,13 @@ body {
     </div>
     <div class="panel-scroll" style="padding:10px 14px">
       
+          <div class="prompt-row" data-filter-text="stats and activity panel aren't responsive, in a smaller display one chart should come after another and the same for st claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 14:37</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">stats and activity panel aren't responsive, in a smaller display one chart should come after another and the same for st</div>
+          </div>
           <div class="prompt-row" data-filter-text="the point in footer under ehaders key-paths etc those should also show information on click since
 the place isn't enough claude-professional">
             <div class="prompt-meta">
@@ -1111,13 +1171,6 @@ Either this page is private or doesn't exist.</div>
             </div>
             <div class="prompt-text">I don't event want tabs I want an all one screen dashboard where the entire screen is split into multiple areas, scrolla</div>
           </div>
-          <div class="prompt-row" data-filter-text="don't always build from scratch always look for whats exisitng that is already there, developed and tested and how can w claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 11:11</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">don't always build from scratch always look for whats exisitng that is already there, developed and tested and how can w</div>
-          </div>
     </div>
   </div>
 
@@ -1240,7 +1293,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 2706],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 2814],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -1255,7 +1308,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 3378, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 3486, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
