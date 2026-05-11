@@ -93,14 +93,42 @@ body {
 /* ─── Dashboard Grid ─────────────────────────────────── */
 #dashboard {
   position: fixed;
-  top: 48px; left: 0; right: 0; bottom: 0;
+  top: 48px; left: 0; right: 0; bottom: 180px;
   display: grid;
   grid-template-columns: 280px 1fr 300px;
-  grid-template-rows: auto 1fr 1fr auto;
+  grid-template-rows: auto 1fr 1fr;
   gap: 1px;
   background: var(--border);
   overflow: hidden;
 }
+
+/* ─── Cheatsheet footer ───────────────────────────────── */
+#footer-cheatsheet {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: 180px;
+  background: var(--surface);
+  border-top: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+#footer-cheatsheet .panel-header {
+  flex-shrink: 0;
+}
+#footer-cs-scroll {
+  display: flex;
+  flex-direction: row;
+  gap: 1px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 1;
+  background: var(--border);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+}
+#footer-cs-scroll::-webkit-scrollbar { height: 3px; }
+#footer-cs-scroll::-webkit-scrollbar-thumb { background: var(--border2); }
 
 /* ─── Panels ─────────────────────────────────────────── */
 .panel {
@@ -152,10 +180,10 @@ body {
   grid-column: 1; grid-row: 1;
 }
 #panel-mcps {
-  grid-column: 1; grid-row: 2 / 4;
+  grid-column: 1; grid-row: 2 / 3;
 }
 #panel-skills {
-  grid-column: 1; grid-row: 4;
+  grid-column: 1; grid-row: 3;
 }
 
 /* Col 2: Stats row (top) → Charts fill remaining */
@@ -163,22 +191,18 @@ body {
   grid-column: 2; grid-row: 1;
 }
 #panel-charts {
-  grid-column: 2; grid-row: 2 / 5;
+  grid-column: 2; grid-row: 2 / 4;
 }
 
-/* Col 3: Hooks (top half) → Activity (bottom half) */
+/* Col 3: Hooks (top) → Prompts (mid) → Plugins (bottom) */
 #panel-hooks {
-  grid-column: 3; grid-row: 1 / 3;
+  grid-column: 3; grid-row: 1;
 }
-#panel-activity {
-  grid-column: 3; grid-row: 3 / 5;
+#panel-prompts {
+  grid-column: 3; grid-row: 2;
 }
-
-/* Cheatsheet: full-width bottom bar */
-#panel-cheatsheet {
-  grid-column: 1 / 4;
-  grid-row: 4;
-  max-height: 220px;
+#panel-plugins {
+  grid-column: 3; grid-row: 3;
 }
 
 /* ─── Stat Cards ─────────────────────────────────────── */
@@ -279,7 +303,7 @@ body {
   gap: 16px;
 }
 
-/* ─── Activity Feed ──────────────────────────────────── */
+/* ─── Activity Feed (kept for internal use) ──────────── */
 .activity-row {
   padding: 9px 0;
   border-bottom: 1px solid var(--border);
@@ -290,6 +314,32 @@ body {
 .activity-row:hover { background: var(--surface); border-radius: var(--radius); padding: 9px 8px; margin: 0 -8px; }
 .activity-meta {
   display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
+}
+
+/* ─── Recent Prompts ─────────────────────────────────── */
+.prompt-row {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.prompt-row:last-child { border-bottom: none; }
+.prompt-row:hover { background: var(--surface); border-radius: var(--radius); padding: 8px 6px; margin: 0 -6px; }
+.prompt-meta {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 3px;
+}
+.prompt-time {
+  font-size: 10px; color: var(--text-faint); font-family: var(--mono);
+  min-width: 72px;
+}
+.prompt-proj {
+  font-size: 10px; color: var(--purple); font-family: var(--mono);
+  background: rgba(139,124,246,0.08); border: 1px solid rgba(139,124,246,0.2);
+  padding: 1px 6px; border-radius: 8px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px;
+}
+.prompt-text {
+  font-size: 11px; color: var(--text); line-height: 1.4;
+  overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
 }
 .activity-date {
   font-size: 10px; color: var(--text-faint); font-family: var(--mono);
@@ -352,20 +402,6 @@ body {
 }
 
 /* ─── Cheatsheet ─────────────────────────────────────── */
-.cs-scroll {
-  display: flex;
-  flex-direction: row;
-  gap: 1px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  height: 100%;
-  background: var(--border);
-  scrollbar-width: thin;
-  scrollbar-color: var(--border2) transparent;
-}
-.cs-scroll::-webkit-scrollbar { height: 3px; }
-.cs-scroll::-webkit-scrollbar-thumb { background: var(--border2); }
-
 .cs-section {
   background: var(--bg);
   min-width: 190px;
@@ -560,7 +596,7 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 12:08</span>
+  <span class="timestamp">Generated 2026-05-11 12:15</span>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
 
@@ -654,15 +690,15 @@ body {
         <div class="stat-label">Active Days</div>
       </div>
       <div class="stat-card teal">
-        <div class="stat-val">6828k</div>
+        <div class="stat-val">6829k</div>
         <div class="stat-label">Input Tokens</div>
       </div>
       <div class="stat-card green">
-        <div class="stat-val">7124k</div>
+        <div class="stat-val">7137k</div>
         <div class="stat-label">Output Tokens</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val">69</div>
+        <div class="stat-val">70</div>
         <div class="stat-label">Log Files</div>
       </div>
       <div class="stat-card">
@@ -694,7 +730,7 @@ body {
         <div class="chart-title">Top Models Used</div>
         <table class="data-table">
           <thead><tr><th>Model</th><th>Events</th></tr></thead>
-          <tbody><tr><td class='mono'>sonnet-4-6</td><td>18,465</td></tr><tr><td class='mono'>haiku-4-5-20251001</td><td>1,583</td></tr><tr><td class='mono'>opus-4-6</td><td>96</td></tr><tr><td class='mono'><synthetic></td><td>20</td></tr></tbody>
+          <tbody><tr><td class='mono'>sonnet-4-6</td><td>18,533</td></tr><tr><td class='mono'>haiku-4-5-20251001</td><td>1,583</td></tr><tr><td class='mono'>opus-4-6</td><td>96</td></tr><tr><td class='mono'><synthetic></td><td>20</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -726,188 +762,225 @@ body {
     </div>
   </div>
 
-  <!-- ─── Col 3: Work Log ──────────────────────────────── -->
-  <div class="panel" id="panel-activity">
+  <!-- ─── Col 3: Recent Prompts ─────────────────────────── -->
+  <div class="panel" id="panel-prompts">
     <div class="panel-header">
-      <span class="panel-title">Work Log</span>
-      <span class="panel-count" id="activity-count">20</span>
+      <span class="panel-title">Recent Prompts</span>
+      <span class="panel-count">20</span>
       <div class="panel-spacer"></div>
-      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-activity', this.value, '.activity-row')">
+      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-prompts', this.value, '.prompt-row')">
     </div>
-    <div class="panel-scroll">
-      <div id="activity-feed">
-        
-          <div class="activity-row" data-filter-text="08 38 2026-05-11">
-            <div class="activity-meta">
-              <span class="activity-date">May 11</span>
-              <span class="badge badge-priv">private</span>
+    <div class="panel-scroll" style="padding:10px 14px">
+      
+          <div class="prompt-row" data-filter-text="also i think i don't need worklog are there more details which can be added to this dashboard, quick reference can be be claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 12:09</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">08 38</div>
-            
+            <div class="prompt-text">Also I think I don't need worklog are there more details which can be added to this dashboard, quick reference can be be</div>
           </div>
-          <div class="activity-row" data-filter-text="11 33 2026-05-11">
-            <div class="activity-meta">
-              <span class="activity-date">May 11</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="also incorporate the claude cheat sheet within the given areas, research and generates ideas on how to do it, be cohesiv claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 12:03</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">11 33</div>
-            
+            <div class="prompt-text">Also incorporate the claude cheat sheet within the given areas, research and generates ideas on how to do it, be cohesiv</div>
           </div>
-          <div class="activity-row" data-filter-text="11 48 2026-05-11">
-            <div class="activity-meta">
-              <span class="activity-date">May 11</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="previos claude code repisitory had 21 skills and ~/claude-professional, but the current on shows only 2 claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:59</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">11 48</div>
-            
+            <div class="prompt-text">previos claude code repisitory had 21 skills and ~/claude-professional, but the current on shows only 2</div>
           </div>
-          <div class="activity-row" data-filter-text="11 53 2026-05-11">
-            <div class="activity-meta">
-              <span class="activity-date">May 11</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="where are the plugins? agents? that is related to claude claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:58</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">11 53</div>
-            
+            <div class="prompt-text">where are the plugins? agents? that is related to claude</div>
           </div>
-          <div class="activity-row" data-filter-text="11 54 2026-05-11">
-            <div class="activity-meta">
-              <span class="activity-date">May 11</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="top models is empty, worklog i don't think is taht useful to be in the middle claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:58</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">11 54</div>
-            
+            <div class="prompt-text">top models is empty, worklog I don't think is taht useful to be in the middle</div>
           </div>
-          <div class="activity-row" data-filter-text="11 55 2026-05-11">
-            <div class="activity-meta">
-              <span class="activity-date">May 11</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="https://narendra-babu-m.github.io/work-log/dashboard.html 404
+either this page is private or doesn't exist. claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:55</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">11 55</div>
-            
+            <div class="prompt-text">https://narendra-babu-m.github.io/work-log/dashboard.html 404
+Either this page is private or doesn't exist.</div>
           </div>
-          <div class="activity-row" data-filter-text="11 57 2026-05-11">
-            <div class="activity-meta">
-              <span class="activity-date">May 11</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="how to deploy? claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:55</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">11 57</div>
-            
+            <div class="prompt-text">How to deploy?</div>
           </div>
-          <div class="activity-row" data-filter-text="12 02 2026-05-11">
-            <div class="activity-meta">
-              <span class="activity-date">May 11</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="where is the html? claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:53</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">12 02</div>
-            
+            <div class="prompt-text">Where is the html?</div>
           </div>
-          <div class="activity-row" data-filter-text="00 39 2026-05-10">
-            <div class="activity-meta">
-              <span class="activity-date">May 10</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="also one more thing say for mcps and others just give the name and what it is for then hover or click in it to open up a claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:49</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">00 39</div>
-            
+            <div class="prompt-text">Also one more thing say for mcps and others just give the name and what it is for then hover or click in it to open up a</div>
           </div>
-          <div class="activity-row" data-filter-text="00 43 2026-05-10">
-            <div class="activity-meta">
-              <span class="activity-date">May 10</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="i don't event want tabs i want an all one screen dashboard where the entire screen is split into multiple areas, scrolla claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:42</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">00 43</div>
-            
+            <div class="prompt-text">I don't event want tabs I want an all one screen dashboard where the entire screen is split into multiple areas, scrolla</div>
           </div>
-          <div class="activity-row" data-filter-text="08 38 2026-05-10">
-            <div class="activity-meta">
-              <span class="activity-date">May 10</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="don't always build from scratch always look for whats exisitng that is already there, developed and tested and how can w claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:11</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">08 38</div>
-            
+            <div class="prompt-text">don't always build from scratch always look for whats exisitng that is already there, developed and tested and how can w</div>
           </div>
-          <div class="activity-row" data-filter-text="08 53 2026-05-10">
-            <div class="activity-meta">
-              <span class="activity-date">May 10</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="agentic claude os can be in a different repo, before building it for me serch globally for projects/ideas/github repos/w claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:10</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">08 53</div>
-            
+            <div class="prompt-text">Agentic claude OS can be in a different repo, before building it for me serch globally for projects/ideas/github repos/w</div>
           </div>
-          <div class="activity-row" data-filter-text="08 55 2026-05-10">
-            <div class="activity-meta">
-              <span class="activity-date">May 10</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="i need a agentic claude os, the manual scripts shown as button in ui which triggers, the hooks, skills, plugins, mcps, e claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:07</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">08 55</div>
-            
+            <div class="prompt-text">I need a agentic claude os, the manual scripts shown as button in UI which triggers, the hooks, skills, plugins, mcps, e</div>
           </div>
-          <div class="activity-row" data-filter-text="09 00 2026-05-10">
-            <div class="activity-meta">
-              <span class="activity-date">May 10</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="continue claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 11:00</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">09 00</div>
-            
+            <div class="prompt-text">continue</div>
           </div>
-          <div class="activity-row" data-filter-text="09 04 2026-05-10">
-            <div class="activity-meta">
-              <span class="activity-date">May 10</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="i need to have a daily log since all the work related stuff and ai learnings i'll be doing here in claude-professional,  claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 10:59</span>
+              <span class="prompt-proj">claude-professional</span>
             </div>
-            <div class="activity-topic">09 04</div>
-            
+            <div class="prompt-text">I need to have a daily log since all the work related stuff and AI learnings I'll be doing here in claude-professional, </div>
           </div>
-          <div class="activity-row" data-filter-text="09 16 2026-05-10">
-            <div class="activity-meta">
-              <span class="activity-date">May 10</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="thirukural arivudaimai kural 429 claude-personal">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 10:27</span>
+              <span class="prompt-proj">claude-personal</span>
             </div>
-            <div class="activity-topic">09 16</div>
-            
+            <div class="prompt-text">Thirukural arivudaimai kural 429</div>
           </div>
-          <div class="activity-row" data-filter-text="09 18 2026-05-10">
-            <div class="activity-meta">
-              <span class="activity-date">May 10</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="run manually claude-personal">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 09:49</span>
+              <span class="prompt-proj">claude-personal</span>
             </div>
-            <div class="activity-topic">09 18</div>
-            
+            <div class="prompt-text">run manually</div>
           </div>
-          <div class="activity-row" data-filter-text="08 30 2026-05-09">
-            <div class="activity-meta">
-              <span class="activity-date">May 9</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="morning digest claude-personal">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 09:46</span>
+              <span class="prompt-proj">claude-personal</span>
             </div>
-            <div class="activity-topic">08 30</div>
-            
+            <div class="prompt-text">morning digest</div>
           </div>
-          <div class="activity-row" data-filter-text="08 38 2026-05-09">
-            <div class="activity-meta">
-              <span class="activity-date">May 9</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="you have givem the power to run endlessly and find as many patterns as you want use as many great techniques you know, r claude-personal">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 00:34</span>
+              <span class="prompt-proj">claude-personal</span>
             </div>
-            <div class="activity-topic">08 38</div>
-            
+            <div class="prompt-text">you have givem the power to run endlessly and find as many patterns as you want use as many great techniques you know, r</div>
           </div>
-          <div class="activity-row" data-filter-text="08 43 2026-05-09">
-            <div class="activity-meta">
-              <span class="activity-date">May 9</span>
-              <span class="badge badge-priv">private</span>
+          <div class="prompt-row" data-filter-text="once done perform pattern recognition and linking like you did previously claude-personal">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 00:32</span>
+              <span class="prompt-proj">claude-personal</span>
             </div>
-            <div class="activity-topic">08 43</div>
-            
+            <div class="prompt-text">once done perform pattern recognition and linking like you did previously</div>
           </div>
-      </div>
     </div>
   </div>
-  <!-- ─── Cheatsheet: full-width bottom bar ───────────── -->
-  <div class="panel" id="panel-cheatsheet">
+
+  <!-- ─── Col 3: Plugins ────────────────────────────────── -->
+  <div class="panel" id="panel-plugins">
     <div class="panel-header">
-      <span class="panel-title">Quick Reference</span>
-      <span class="panel-count">⌨ shortcuts · / commands · --flags · workflow</span>
+      <span class="panel-title">Plugins</span>
+      <span class="panel-count">6</span>
+      <div class="panel-spacer"></div>
+      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-plugins', this.value, 'tr[data-filter-text]')">
     </div>
-    <div class="cs-scroll">
-      <div class="cs-section">
+    <div class="panel-scroll">
+      <table class="data-table">
+        <thead><tr><th>Plugin</th><th>Ver</th><th>Scope</th><th>Project</th></tr></thead>
+        <tbody>
+          
+          <tr data-filter-text="caveman global">
+            <td class="mono">caveman</td>
+            <td class="mono" style="color:var(--text-faint);font-size:10px">ef6050c5e184</td>
+            <td><span class="badge badge-event">user</span></td>
+            <td style="color:var(--text-faint);font-size:10px">global</td>
+          </tr>
+          <tr data-filter-text="plugin-dev 04-dm-pod2-mcp">
+            <td class="mono">plugin-dev</td>
+            <td class="mono" style="color:var(--text-faint);font-size:10px">78497c524da3</td>
+            <td><span class="badge badge-event">project</span></td>
+            <td style="color:var(--text-faint);font-size:10px">04-dm-pod2-mcp</td>
+          </tr>
+          <tr data-filter-text="pyright-lsp global">
+            <td class="mono">pyright-lsp</td>
+            <td class="mono" style="color:var(--text-faint);font-size:10px">1.0.0</td>
+            <td><span class="badge badge-event">user</span></td>
+            <td style="color:var(--text-faint);font-size:10px">global</td>
+          </tr>
+          <tr data-filter-text="superpowers mylimsqualitysamplewidge">
+            <td class="mono">superpowers</td>
+            <td class="mono" style="color:var(--text-faint);font-size:10px">5.0.7</td>
+            <td><span class="badge badge-event">project</span></td>
+            <td style="color:var(--text-faint);font-size:10px">myLimsQualitySampleWidge</td>
+          </tr>
+          <tr data-filter-text="typescript-lsp 04-dm-pod2-mcp">
+            <td class="mono">typescript-lsp</td>
+            <td class="mono" style="color:var(--text-faint);font-size:10px">1.0.0</td>
+            <td><span class="badge badge-event">project</span></td>
+            <td style="color:var(--text-faint);font-size:10px">04-dm-pod2-mcp</td>
+          </tr>
+          <tr data-filter-text="warp global">
+            <td class="mono">warp</td>
+            <td class="mono" style="color:var(--text-faint);font-size:10px">2.0.0</td>
+            <td><span class="badge badge-event">user</span></td>
+            <td style="color:var(--text-faint);font-size:10px">global</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /#dashboard -->
+
+<!-- ─── Cheatsheet: fixed footer ────────────────────────── -->
+<div id="footer-cheatsheet">
+  <div class="panel-header">
+    <span class="panel-title">Quick Reference</span>
+    <span class="panel-count">⌨ shortcuts · / commands · --flags · workflow</span>
+  </div>
+  <div id="footer-cs-scroll">
+    <div class="cs-section">
   <div class="cs-section-head"><span class="cs-icon">⌨</span>Keyboard</div>
   <div class="cs-rows"><div class="cs-row"><span class="cs-key shortcut">Esc</span><span class="cs-desc">Cancel / close modal</span></div><div class="cs-row"><span class="cs-key shortcut">Cmd+K</span><span class="cs-desc">Focus global search</span></div><div class="cs-row"><span class="cs-key shortcut">↑ / ↓</span><span class="cs-desc">Command history</span></div><div class="cs-row"><span class="cs-key shortcut">Tab</span><span class="cs-desc">Autocomplete</span></div><div class="cs-row"><span class="cs-key shortcut">Shift+Enter</span><span class="cs-desc">New line (no send)</span></div><div class="cs-row"><span class="cs-key shortcut">Cmd+Esc</span><span class="cs-desc">Toggle editor / Claude</span></div><div class="cs-row"><span class="cs-key shortcut">Ctrl+O</span><span class="cs-desc">Expand thinking blocks</span></div><div class="cs-row"><span class="cs-key shortcut">Ctrl+D</span><span class="cs-desc">Exit session</span></div></div>
 </div><div class="cs-section">
@@ -944,10 +1017,8 @@ body {
   <div class="cs-section-head"><span class="cs-icon">✨</span>Your skills</div>
   <div class="cs-rows"><div class="cs-row"><span class="cs-key cmd">/apply</span><span class="cs-desc">You are processing an `/apply` command. </span></div><div class="cs-row"><span class="cs-key cmd">/publish</span><span class="cs-desc">Publish professional work log to https:/</span></div><div class="cs-row"><span class="cs-key cmd">/caveman</span><span class="cs-desc">---</span></div><div class="cs-row"><span class="cs-key cmd">/caveman-compress</span><span class="cs-desc">---</span></div><div class="cs-row"><span class="cs-key cmd">/cavecrew</span><span class="cs-desc">---</span></div><div class="cs-row"><span class="cs-key cmd">/caveman-stats</span><span class="cs-desc">---</span></div><div class="cs-row"><span class="cs-key cmd">/compress</span><span class="cs-desc">---</span></div><div class="cs-row"><span class="cs-key cmd">/caveman-commit</span><span class="cs-desc">---</span></div><div class="cs-row"><span class="cs-key cmd">/caveman-help</span><span class="cs-desc">---</span></div><div class="cs-row"><span class="cs-key cmd">/caveman-review</span><span class="cs-desc">---</span></div></div>
 </div>
-    </div>
   </div>
-
-</div><!-- /#dashboard -->
+</div>
 
 <script>
 // ─── Charts ─────────────────────────────────────────────────────────────────
@@ -973,7 +1044,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 1627],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 1826],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -988,7 +1059,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 3143, 1887, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 3342, 1887, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
@@ -1024,7 +1095,8 @@ function globalSearch(query) {
   // Apply to all filterable panels
   filterPanel('panel-mcps', q, '.mcp-card');
   filterPanel('panel-hooks', q, 'tr[data-filter-text]');
-  filterPanel('panel-activity', q, '.activity-row');
+  filterPanel('panel-prompts', q, '.prompt-row');
+  filterPanel('panel-plugins', q, 'tr[data-filter-text]');
 }
 
 // ─── Keyboard shortcut ───────────────────────────────────────────────────────
