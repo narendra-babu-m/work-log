@@ -129,15 +129,35 @@ body {
 #footer-cheatsheet {
   position: fixed;
   left: 0; right: 0; bottom: 0;
-  height: 180px;
+  height: var(--footer-h, 180px);
+  min-height: 36px;
   background: var(--surface);
   border-top: 2px solid var(--border);
   display: flex;
   flex-direction: column;
   z-index: 50;
+  transition: none;
+}
+/* Drag handle on top edge of footer */
+#footer-drag {
+  position: absolute;
+  top: -5px; left: 0; right: 0;
+  height: 10px;
+  cursor: row-resize;
+  z-index: 60;
+  background: transparent;
+  transition: background 0.15s;
+}
+#footer-drag:hover, #footer-drag.dragging {
+  background: rgba(217,119,87,0.35);
+}
+/* Collapsed state: only header bar visible */
+#footer-cheatsheet.collapsed #footer-cs-scroll {
+  display: none;
 }
 #footer-cheatsheet .panel-header {
   flex-shrink: 0;
+  user-select: none;
 }
 #footer-cs-scroll {
   display: flex;
@@ -691,7 +711,7 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 12:29</span>
+  <span class="timestamp">Generated 2026-05-11 12:31</span>
   <button class="refresh-btn" onclick="resetLayout()" title="Reset panel sizes to default" style="margin-right:4px">⊞ Reset</button>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
@@ -840,11 +860,11 @@ body {
         <div class="stat-label">Input Tokens</div>
       </div>
       <div class="stat-card green">
-        <div class="stat-val">7161k</div>
+        <div class="stat-val">7164k</div>
         <div class="stat-label">Output Tokens</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val">73</div>
+        <div class="stat-val">74</div>
         <div class="stat-label">Log Files</div>
       </div>
       <div class="stat-card">
@@ -876,7 +896,7 @@ body {
         <div class="chart-title">Top Models Used</div>
         <table class="data-table">
           <thead><tr><th>Model</th><th>Events</th></tr></thead>
-          <tbody><tr><td class='mono'>sonnet-4-6</td><td>18,655</td></tr><tr><td class='mono'>haiku-4-5-20251001</td><td>1,583</td></tr><tr><td class='mono'>opus-4-6</td><td>96</td></tr><tr><td class='mono'><synthetic></td><td>20</td></tr></tbody>
+          <tbody><tr><td class='mono'>sonnet-4-6</td><td>18,669</td></tr><tr><td class='mono'>haiku-4-5-20251001</td><td>1,583</td></tr><tr><td class='mono'>opus-4-6</td><td>96</td></tr><tr><td class='mono'><synthetic></td><td>20</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -954,6 +974,13 @@ body {
     </div>
     <div class="panel-scroll" style="padding:10px 14px">
       
+          <div class="prompt-row" data-filter-text="what happened to the footer why it isn't responsive say sometimes i might need just the cheat sheet then i should be abl claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 12:30</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">what happened to the footer why it isn't responsive say sometimes I might need just the cheat sheet then I should be abl</div>
+          </div>
           <div class="prompt-row" data-filter-text="need not show description for skills, its too long and anyway on click we will be able to find it claude-professional">
             <div class="prompt-meta">
               <span class="prompt-time">05-11 12:29</span>
@@ -1089,13 +1116,6 @@ Either this page is private or doesn't exist.</div>
             </div>
             <div class="prompt-text">I need a agentic claude os, the manual scripts shown as button in UI which triggers, the hooks, skills, plugins, mcps, e</div>
           </div>
-          <div class="prompt-row" data-filter-text="continue claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 11:00</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">continue</div>
-          </div>
     </div>
   </div>
 
@@ -1146,9 +1166,12 @@ Either this page is private or doesn't exist.</div>
 
 <!-- ─── Cheatsheet: fixed footer ────────────────────────── -->
 <div id="footer-cheatsheet">
+  <div id="footer-drag" title="Drag to resize · Double-click to collapse/expand"></div>
   <div class="panel-header">
     <span class="panel-title">Quick Reference</span>
     <span class="panel-count">⌨ shortcuts · / commands · --flags · workflow</span>
+    <div class="panel-spacer"></div>
+    <button class="refresh-btn" id="footer-toggle" onclick="toggleFooter()" title="Collapse/expand" style="font-size:12px;padding:2px 8px">▾</button>
   </div>
   <div id="footer-cs-scroll">
     <div class="cs-section">
@@ -1215,7 +1238,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 2194],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 2238],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -1230,7 +1253,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 3710, 1887, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 3712, 1929, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
@@ -1540,6 +1563,81 @@ function showPluginModal(idx) {
     saveLayout(layout);
     applyLayout();
   };
+})();
+
+// ─── Footer (cheatsheet) resize + collapse ───────────────────────────────────
+(function() {
+  const FOOTER_KEY = 'claude-os-footer-v1';
+  const HEADER_H = 36;   // collapsed height (panel-header only)
+  const DEFAULT_H = 180;
+  const MIN_H = HEADER_H;
+  const MAX_H = () => window.innerHeight - 200;
+
+  const footer = document.getElementById('footer-cheatsheet');
+  const dash   = document.getElementById('dashboard');
+  const handle = document.getElementById('footer-drag');
+  const btn    = document.getElementById('footer-toggle');
+
+  function loadFooter() {
+    try { return JSON.parse(localStorage.getItem(FOOTER_KEY) || 'null') || { h: DEFAULT_H, collapsed: false }; }
+    catch(e) { return { h: DEFAULT_H, collapsed: false }; }
+  }
+  function saveFooter(state) {
+    try { localStorage.setItem(FOOTER_KEY, JSON.stringify(state)); } catch(e) {}
+  }
+
+  let state = loadFooter();
+
+  function applyFooter() {
+    const h = state.collapsed ? HEADER_H : Math.max(MIN_H, Math.min(state.h, MAX_H()));
+    footer.style.setProperty('--footer-h', h + 'px');
+    footer.style.height = h + 'px';
+    dash.style.bottom = h + 'px';
+    footer.classList.toggle('collapsed', state.collapsed);
+    btn.textContent = state.collapsed ? '▴' : '▾';
+  }
+
+  // Drag handle
+  handle.addEventListener('mousedown', e => {
+    e.preventDefault();
+    handle.classList.add('dragging');
+    const startY = e.clientY;
+    const startH = footer.offsetHeight;
+
+    function onMove(e) {
+      const dy = startY - e.clientY;   // drag up → increase height
+      state.h = Math.max(MIN_H, Math.min(startH + dy, MAX_H()));
+      state.collapsed = state.h <= HEADER_H + 10;
+      applyFooter();
+    }
+    function onUp() {
+      handle.classList.remove('dragging');
+      saveFooter(state);
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+
+  // Double-click handle → toggle collapse/expand
+  handle.addEventListener('dblclick', () => {
+    state.collapsed = !state.collapsed;
+    if (!state.collapsed && state.h <= HEADER_H + 10) state.h = DEFAULT_H;
+    applyFooter();
+    saveFooter(state);
+  });
+
+  // Toggle button
+  window.toggleFooter = function() {
+    state.collapsed = !state.collapsed;
+    if (!state.collapsed && state.h <= HEADER_H + 10) state.h = DEFAULT_H;
+    applyFooter();
+    saveFooter(state);
+  };
+
+  applyFooter();
+  window.addEventListener('resize', applyFooter);
 })();
 </script>
 </body>
