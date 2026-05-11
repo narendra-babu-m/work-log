@@ -101,16 +101,6 @@ body {
   overflow: hidden;
 }
 
-/* side-cols wrapper — transparent on desktop */
-#side-cols {
-  display: contents;
-}
-
-/* Explicit grid placement so col-2 (first in DOM) lands in middle */
-#col-1 { grid-column: 1; }
-#col-2 { grid-column: 2; }
-#col-3 { grid-column: 3; }
-
 /* Each column is an independent flex container */
 .col-wrap {
   display: flex;
@@ -589,115 +579,64 @@ body {
 }
 
 /* ─── Responsive ─────────────────────────────────────── */
-
-/* ── Tablet: 600–900px ── */
 @media (max-width: 900px) {
-  html, body { overflow: auto; height: auto; }
+  body { overflow: hidden; }
   #header {
     position: relative;
     top: auto; left: auto; right: auto;
     height: auto; min-height: 48px;
-    flex-wrap: wrap; gap: 8px; padding: 10px 14px;
+    flex-wrap: wrap;
+    gap: 8px; padding: 10px 14px;
   }
   #header .subtitle, #header .timestamp { display: none; }
   #header #global-search { width: 100%; order: 10; }
-  .resize-handle { display: none !important; }
+  #footer-cheatsheet { display: none; }
+  .resize-handle.col-handle { display: none; }
 
-  /* Footer inline */
-  #footer-cheatsheet {
-    position: relative; left: auto; right: auto; bottom: auto;
-    height: auto; min-height: unset;
-    border-top: 2px solid var(--border);
-  }
-  #footer-drag { display: none; }
-  #footer-cs-scroll {
-    flex-direction: column; overflow: visible;
-    height: auto; background: var(--bg); gap: 0;
-  }
-  .cs-section {
-    min-width: 0; max-width: none; width: 100%;
-    border-bottom: 1px solid var(--border); flex-shrink: unset;
-  }
-  .cs-section-head {
-    cursor: pointer; user-select: none; position: relative;
-  }
-  .cs-section-head::after {
-    content: '▾'; position: absolute; right: 12px; top: 50%;
-    transform: translateY(-50%); font-size: 10px; color: var(--text-faint);
-    transition: transform 0.2s;
-  }
-  .cs-section.cs-collapsed .cs-section-head::after {
-    transform: translateY(-50%) rotate(-90deg);
-  }
-  .cs-section.cs-collapsed .cs-rows { display: none; }
-  .cs-rows { overflow: visible; max-height: none; }
-
-  /* Dashboard: 2-col — col-2 left (55%), side-cols right (45%) stacked */
+  /* Dashboard: 3 equal columns side by side */
   #dashboard {
-    position: relative; top: auto; bottom: auto; left: auto; right: auto;
-    height: auto; overflow: visible;
-    display: flex; flex-direction: row;
-    background: var(--border); gap: 1px;
-    grid-template-columns: unset;
-    min-height: 500px;
-  }
-  #col-2 {
-    flex: 55 1 0; min-width: 0;
-    grid-column: unset; grid-row: unset;
-    height: auto; overflow-y: auto; display: flex; flex-direction: column;
-  }
-  /* side-cols: right column, stacks col-1 above col-3 */
-  #side-cols {
-    display: flex; flex-direction: column;
-    flex: 45 1 0; min-width: 0; gap: 1px;
+    position: fixed;
+    top: auto; bottom: 0;
+    left: 0; right: 0;
+    height: calc(100dvh - 80px);
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
     background: var(--border);
+    gap: 1px;
+    grid-template-columns: unset;
   }
-  #col-1, #col-3 {
-    flex: none; width: 100%; min-width: 0;
-    grid-column: unset; grid-row: unset;
-    height: auto; overflow-y: auto; display: flex; flex-direction: column;
-    background: var(--bg);
+
+  /* Each column scrolls independently — override JS-set heights */
+  .col-wrap {
+    flex: 1 1 0 !important;
+    min-width: 0;
+    height: 100% !important;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
-  #col-1 { flex: 1 1 0; }
-  #col-3 { flex: 1 1 0; }
+  /* Panels inside: natural height, row handles hidden */
+  .panel {
+    flex: none !important;
+    height: auto !important;
+    min-height: unset !important;
+  }
+  .panel-scroll {
+    overflow: visible;
+    flex: none;
+    height: auto;
+    max-height: none;
+  }
+  .resize-handle.row-handle { display: none; }
 
-  /* Panels: natural height */
-  .panel { flex: none !important; height: auto !important; min-height: unset !important; }
-  .panel-scroll { overflow: visible; flex: none; height: auto; max-height: none; }
-
-  .stat-grid { grid-template-columns: repeat(3, 1fr); }
+  /* Stats: 2 columns */
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .charts-row { grid-template-columns: 1fr; }
-  .insight-grid { grid-template-columns: 1fr 1fr; }
+  .insight-grid { grid-template-columns: 1fr; }
 }
 
-/* ── Mobile: <600px — single column stack ── */
-@media (max-width: 600px) {
-  #dashboard {
-    flex-direction: column !important;
-  }
-  #col-2 { flex: none !important; width: 100%; }
-  #side-cols {
-    flex: none !important; width: 100%;
-    flex-direction: column; gap: 1px;
-    background: var(--border);
-  }
-  #col-1, #col-3 { flex: none !important; width: 100%; }
-
-  /* Footer: 2-per-row grid */
-  #footer-cs-scroll {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: 0; background: var(--border);
-  }
-  .cs-section {
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .cs-section:last-child:nth-child(odd) { grid-column: 1 / -1; }
-
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
-  .insight-grid { grid-template-columns: 1fr; }
-  #header .refresh-btn { display: none; }
+@media (max-width: 500px) {
+  .col-wrap { min-width: 280px; }
 }
 
 /* ─── Utilities ──────────────────────────────────────── */
@@ -872,107 +811,13 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 16:50</span>
+  <span class="timestamp">Generated 2026-05-11 17:04</span>
   <button class="refresh-btn" onclick="resetLayout()" title="Reset panel sizes to default" style="margin-right:4px">⊞ Reset</button>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
 
 <!-- ─── Dashboard Grid ──────────────────────────────────── -->
 <div id="dashboard">
-
-  <!-- ─── Col 2 (middle) — placed in grid col 2 via CSS ── -->
-  <div class="col-wrap" id="col-2">
-    <!-- Stats -->
-    <div class="panel" id="panel-stats">
-      <div class="collapsible-section">
-        <div class="panel-header" data-collapsible>
-          <span class="panel-title">Stats</span>
-        </div>
-        <div class="stat-grid">
-        <div class="stat-card accent">
-          <div class="stat-val">0</div>
-          <div class="stat-label">Sessions</div>
-        </div>
-        <div class="stat-card purple">
-          <div class="stat-val">20</div>
-          <div class="stat-label">Active Days (30d)</div>
-        </div>
-        <div class="stat-card teal">
-          <div class="stat-val">6839k</div>
-          <div class="stat-label">Input Tokens</div>
-        </div>
-        <div class="stat-card green">
-          <div class="stat-val">7278k</div>
-          <div class="stat-label">Output Tokens</div>
-        </div>
-        <div class="stat-card accent">
-          <div class="stat-val">3833</div>
-          <div class="stat-label">Today</div>
-        </div>
-        <div class="stat-card teal">
-          <div class="stat-val">99%</div>
-          <div class="stat-label">Cache ROI</div>
-        </div>
-      </div>
-      </div><!-- /collapsible-section -->
-    </div>
-    <div class="resize-handle row-handle" data-col="2" data-idx="0"></div>
-    <!-- Charts -->
-    <div class="panel" id="panel-charts">
-      <div class="collapsible-section">
-        <div class="panel-header" data-collapsible>
-          <span class="panel-title">Activity</span>
-        </div>
-      <div class="panel-scroll">
-        <div class="chart-wrap">
-          <div class="charts-row">
-            <div>
-              <div class="chart-title">Last 30 Days</div>
-              <canvas id="chart-daily" height="130"></canvas>
-            </div>
-            <div>
-              <div class="chart-title">By Hour of Day</div>
-              <canvas id="chart-hourly" height="130"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="insight-grid">
-          <div class="insight-card">
-            <div class="insight-icon">📈</div>
-            <div class="insight-body">
-              <div class="insight-val">12964</div>
-              <div class="insight-label">Peak day (05-08)</div>
-            </div>
-          </div>
-          <div class="insight-card">
-            <div class="insight-icon">⚡</div>
-            <div class="insight-body">
-              <div class="insight-val">3058</div>
-              <div class="insight-label">Avg events / active day</div>
-            </div>
-          </div>
-          <div class="insight-card">
-            <div class="insight-icon">💾</div>
-            <div class="insight-body">
-              <div class="insight-val">1276243k</div>
-              <div class="insight-label">Cache tokens read (99% ROI)</div>
-            </div>
-          </div>
-          <div class="insight-card">
-            <div class="insight-icon">📁</div>
-            <div class="insight-body">
-              <div class="insight-val insight-val-sm">professional</div>
-              <div class="insight-label">Most active project</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      </div><!-- /collapsible-section -->
-    </div>
-  </div><!-- /#col-2 -->
-
-  <!-- ─── Side cols wrapper — display:contents on desktop, flex-col on tablet ── -->
-  <div id="side-cols">
 
   <!-- ─── Col 1 ────────────────────────────────────────── -->
   <div class="col-wrap" id="col-1">
@@ -983,7 +828,7 @@ body {
           <span class="panel-title">Models Used</span>
         </div>
         <div class="model-mini-wrap">
-          <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">19,115</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
+          <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">19,156</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
         </div>
       </div>
     </div>
@@ -1098,6 +943,97 @@ body {
       </div>
     </div>
   </div><!-- /#col-1 -->
+
+  <!-- ─── Col 2 ────────────────────────────────────────── -->
+  <div class="col-wrap" id="col-2">
+    <!-- Stats -->
+    <div class="panel" id="panel-stats">
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">Stats</span>
+        </div>
+        <div class="stat-grid">
+        <div class="stat-card accent">
+          <div class="stat-val">0</div>
+          <div class="stat-label">Sessions</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-val">20</div>
+          <div class="stat-label">Active Days (30d)</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-val">6839k</div>
+          <div class="stat-label">Input Tokens</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-val">7293k</div>
+          <div class="stat-label">Output Tokens</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-val">3970</div>
+          <div class="stat-label">Today</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-val">99%</div>
+          <div class="stat-label">Cache ROI</div>
+        </div>
+      </div>
+      </div><!-- /collapsible-section -->
+    </div>
+    <div class="resize-handle row-handle" data-col="2" data-idx="0"></div>
+    <!-- Charts -->
+    <div class="panel" id="panel-charts">
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">Activity</span>
+        </div>
+      <div class="panel-scroll">
+        <div class="chart-wrap">
+          <div class="charts-row">
+            <div>
+              <div class="chart-title">Last 30 Days</div>
+              <canvas id="chart-daily" height="130"></canvas>
+            </div>
+            <div>
+              <div class="chart-title">By Hour of Day</div>
+              <canvas id="chart-hourly" height="130"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="insight-grid">
+          <div class="insight-card">
+            <div class="insight-icon">📈</div>
+            <div class="insight-body">
+              <div class="insight-val">12964</div>
+              <div class="insight-label">Peak day (05-08)</div>
+            </div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-icon">⚡</div>
+            <div class="insight-body">
+              <div class="insight-val">3065</div>
+              <div class="insight-label">Avg events / active day</div>
+            </div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-icon">💾</div>
+            <div class="insight-body">
+              <div class="insight-val">1278693k</div>
+              <div class="insight-label">Cache tokens read (99% ROI)</div>
+            </div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-icon">📁</div>
+            <div class="insight-body">
+              <div class="insight-val insight-val-sm">professional</div>
+              <div class="insight-label">Most active project</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div><!-- /collapsible-section -->
+    </div>
+  </div><!-- /#col-2 -->
 
   <!-- ─── Col 3 ────────────────────────────────────────── -->
   <div class="col-wrap" id="col-3">
@@ -1222,6 +1158,13 @@ body {
         </div>
         <div class="panel-scroll" style="padding:10px 14px">
           
+          <div class="prompt-row" data-filter-text="you have corrupted the entire dashboard, have you saved the previous version before we made this change? if yes that was claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 16:59</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">You have corrupted the entire dashboard, have you saved the previous version before we made this change? If yes that was</div>
+          </div>
           <div class="prompt-row" data-filter-text="2 panel layout isn't working as expected claude-professional">
             <div class="prompt-meta">
               <span class="prompt-time">05-11 16:45</span>
@@ -1357,19 +1300,10 @@ the place isn't enough</div>
             </div>
             <div class="prompt-text">under hooks you show commands but I don't think it's of much use also are all the hooks listed?</div>
           </div>
-          <div class="prompt-row" data-filter-text="not just version but also other details, keep it clean, don't have so many columns so we reduce the use of scrolling claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 12:20</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">not just version but also other details, keep it clean, don't have so many columns so we reduce the use of scrolling</div>
-          </div>
         </div>
       </div>
     </div>
   </div><!-- /#col-3 -->
-
-  </div><!-- /#side-cols -->
 
   <!-- Col resize handles (positioned by JS) -->
   <div class="resize-handle col-handle" id="handle-col1" title="Drag to resize column"></div>
@@ -1451,7 +1385,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3833],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3970],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -1466,7 +1400,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 4408, 2921, 1286, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 4408, 2921, 1423, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
@@ -1661,10 +1595,8 @@ function showCsModal(idx) {
   let layout = loadLayout();
 
   // ── Apply column widths ────────────────────────────────────────────────────
-  function isResponsive() { return window.innerWidth <= 900; }
 
   function applyColWidths() {
-    if (isResponsive()) return;
     const w = dash.offsetWidth;
     const col1 = Math.max(MIN_COL, Math.min(layout.col1, w - MIN_COL * 2));
     const col3 = Math.max(MIN_COL, Math.min(layout.col3, w - col1 - MIN_COL));
@@ -1681,7 +1613,6 @@ function showCsModal(idx) {
   };
 
   function applyColRows(colId) {
-    if (isResponsive()) return;
     const panelIds = COL_PANELS[colId];
     const heights = (layout.rows[colId] || []);
     const colEl = document.getElementById('col-' + colId);
@@ -1818,7 +1749,7 @@ function showCsModal(idx) {
 // ─── Footer (cheatsheet) resize + collapse ───────────────────────────────────
 (function() {
   const FOOTER_KEY = 'claude-os-footer-v1';
-  const HEADER_H = 36;
+  const HEADER_H = 36;   // collapsed height (panel-header only)
   const DEFAULT_H = 180;
   const MIN_H = HEADER_H;
   const MAX_H = () => window.innerHeight - 200;
@@ -1827,8 +1758,6 @@ function showCsModal(idx) {
   const dash   = document.getElementById('dashboard');
   const handle = document.getElementById('footer-drag');
   const btn    = document.getElementById('footer-toggle');
-
-  function isResponsive() { return window.innerWidth <= 900; }
 
   function loadFooter() {
     try { return JSON.parse(localStorage.getItem(FOOTER_KEY) || 'null') || { h: DEFAULT_H, collapsed: false }; }
@@ -1841,54 +1770,47 @@ function showCsModal(idx) {
   let state = loadFooter();
 
   function applyFooter() {
-    if (isResponsive()) {
-      // Responsive: footer is inline, no height manipulation
-      footer.style.height = '';
-      footer.style.setProperty('--footer-h', '');
-      if (dash) dash.style.bottom = '';
-      return;
-    }
     const h = state.collapsed ? HEADER_H : Math.max(MIN_H, Math.min(state.h, MAX_H()));
     footer.style.setProperty('--footer-h', h + 'px');
     footer.style.height = h + 'px';
-    if (dash) dash.style.bottom = h + 'px';
+    dash.style.bottom = h + 'px';
     footer.classList.toggle('collapsed', state.collapsed);
-    if (btn) btn.textContent = state.collapsed ? '▴' : '▾';
+    btn.textContent = state.collapsed ? '▴' : '▾';
   }
 
-  if (handle) {
-    handle.addEventListener('mousedown', e => {
-      if (isResponsive()) return;
-      e.preventDefault();
-      handle.classList.add('dragging');
-      const startY = e.clientY;
-      const startH = footer.offsetHeight;
-      function onMove(e) {
-        const dy = startY - e.clientY;
-        state.h = Math.max(MIN_H, Math.min(startH + dy, MAX_H()));
-        state.collapsed = state.h <= HEADER_H + 10;
-        applyFooter();
-      }
-      function onUp() {
-        handle.classList.remove('dragging');
-        saveFooter(state);
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-      }
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-    });
-    handle.addEventListener('dblclick', () => {
-      if (isResponsive()) return;
-      state.collapsed = !state.collapsed;
-      if (!state.collapsed && state.h <= HEADER_H + 10) state.h = DEFAULT_H;
+  // Drag handle
+  handle.addEventListener('mousedown', e => {
+    e.preventDefault();
+    handle.classList.add('dragging');
+    const startY = e.clientY;
+    const startH = footer.offsetHeight;
+
+    function onMove(e) {
+      const dy = startY - e.clientY;   // drag up → increase height
+      state.h = Math.max(MIN_H, Math.min(startH + dy, MAX_H()));
+      state.collapsed = state.h <= HEADER_H + 10;
       applyFooter();
+    }
+    function onUp() {
+      handle.classList.remove('dragging');
       saveFooter(state);
-    });
-  }
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
 
+  // Double-click handle → toggle collapse/expand
+  handle.addEventListener('dblclick', () => {
+    state.collapsed = !state.collapsed;
+    if (!state.collapsed && state.h <= HEADER_H + 10) state.h = DEFAULT_H;
+    applyFooter();
+    saveFooter(state);
+  });
+
+  // Toggle button
   window.toggleFooter = function() {
-    if (isResponsive()) return;
     state.collapsed = !state.collapsed;
     if (!state.collapsed && state.h <= HEADER_H + 10) state.h = DEFAULT_H;
     applyFooter();
@@ -1897,34 +1819,6 @@ function showCsModal(idx) {
 
   applyFooter();
   window.addEventListener('resize', applyFooter);
-})();
-
-// ─── Cheatsheet section collapse (responsive) ────────────────────────────────
-(function() {
-  const CS_KEY = 'claude-os-cs-collapsed';
-  function load() {
-    try { return new Set(JSON.parse(localStorage.getItem(CS_KEY) || '[]')); }
-    catch { return new Set(); }
-  }
-  function save(set) {
-    try { localStorage.setItem(CS_KEY, JSON.stringify([...set])); } catch {}
-  }
-
-  let collapsed = load();
-
-  document.querySelectorAll('.cs-section-head').forEach((head, i) => {
-    const section = head.parentElement;
-    const key = 'cs-' + i;
-    if (collapsed.has(key)) section.classList.add('cs-collapsed');
-
-    head.addEventListener('click', () => {
-      if (window.innerWidth > 900) return;  // desktop: no collapse
-      section.classList.toggle('cs-collapsed');
-      if (section.classList.contains('cs-collapsed')) collapsed.add(key);
-      else collapsed.delete(key);
-      save(collapsed);
-    });
-  });
 })();
 </script>
 </body>
