@@ -447,8 +447,8 @@ body {
   font-family: var(--mono);
 }
 .skill-row {
-  display: flex; align-items: baseline; gap: 8px;
-  padding: 6px 14px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 14px;
   border-bottom: 1px solid rgba(58,59,63,0.5);
   cursor: pointer; transition: background 0.1s;
   flex-wrap: wrap;
@@ -691,7 +691,7 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 12:28</span>
+  <span class="timestamp">Generated 2026-05-11 12:29</span>
   <button class="refresh-btn" onclick="resetLayout()" title="Reset panel sizes to default" style="margin-right:4px">⊞ Reset</button>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
@@ -770,49 +770,49 @@ body {
     </div>
     <div class="panel-scroll">
       <div class="skill-cat-header" style="color:#d97757">Workflow <span class="skill-cat-count">5</span></div><div class="skill-row" data-filter-text="brainstorming you must use this before any creative work - creating features, building components, adding function workflow" onclick="showSkillModal(10)">
-  <span class="skill-name">/brainstorming</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">You MUST use this before any creative work - creating features, building components, adding function</span>
+  <span class="skill-name">/brainstorming</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="executing-plans use when you have a written implementation plan to execute in a separate session with review checkpo workflow" onclick="showSkillModal(12)">
-  <span class="skill-name">/executing-plans</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when you have a written implementation plan to execute in a separate session with review checkpo</span>
+  <span class="skill-name">/executing-plans</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="finishing-a-development-branch use when implementation is complete, all tests pass, and you need to decide how to integrate the wor workflow" onclick="showSkillModal(13)">
-  <span class="skill-name">/finishing-a-development-branch</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when implementation is complete, all tests pass, and you need to decide how to integrate the wor</span>
+  <span class="skill-name">/finishing-a-development-branch</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="writing-plans use when you have a spec or requirements for a multi-step task, before touching code workflow" onclick="showSkillModal(22)">
-  <span class="skill-name">/writing-plans</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when you have a spec or requirements for a multi-step task, before touching code</span>
+  <span class="skill-name">/writing-plans</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="writing-skills use when creating new skills, editing existing skills, or verifying skills work before deployment workflow" onclick="showSkillModal(23)">
-  <span class="skill-name">/writing-skills</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when creating new skills, editing existing skills, or verifying skills work before deployment</span>
+  <span class="skill-name">/writing-skills</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-cat-header" style="color:#4ec9b0">Dev <span class="skill-cat-count">7</span></div><div class="skill-row" data-filter-text="dispatching-parallel-agents use when facing 2+ independent tasks that can be worked on without shared state or sequential depend dev" onclick="showSkillModal(11)">
-  <span class="skill-name">/dispatching-parallel-agents</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when facing 2+ independent tasks that can be worked on without shared state or sequential depend</span>
+  <span class="skill-name">/dispatching-parallel-agents</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="subagent-driven-development use when executing implementation plans with independent tasks in the current session dev" onclick="showSkillModal(16)">
-  <span class="skill-name">/subagent-driven-development</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when executing implementation plans with independent tasks in the current session</span>
+  <span class="skill-name">/subagent-driven-development</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="systematic-debugging use when encountering any bug, test failure, or unexpected behavior, before proposing fixes dev" onclick="showSkillModal(17)">
-  <span class="skill-name">/systematic-debugging</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes</span>
+  <span class="skill-name">/systematic-debugging</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="test-driven-development use when implementing any feature or bugfix, before writing implementation code dev" onclick="showSkillModal(18)">
-  <span class="skill-name">/test-driven-development</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when implementing any feature or bugfix, before writing implementation code</span>
+  <span class="skill-name">/test-driven-development</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="using-git-worktrees use when starting feature work that needs isolation from current workspace or before executing imple dev" onclick="showSkillModal(19)">
-  <span class="skill-name">/using-git-worktrees</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when starting feature work that needs isolation from current workspace or before executing imple</span>
+  <span class="skill-name">/using-git-worktrees</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="using-superpowers use when starting any conversation - establishes how to find and use skills, requiring skill tool in dev" onclick="showSkillModal(20)">
-  <span class="skill-name">/using-superpowers</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when starting any conversation - establishes how to find and use skills, requiring Skill tool in</span>
+  <span class="skill-name">/using-superpowers</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="verification-before-completion use when about to claim work is complete, fixed, or passing, before committing or creating prs - req dev" onclick="showSkillModal(21)">
-  <span class="skill-name">/verification-before-completion</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - req</span>
+  <span class="skill-name">/verification-before-completion</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-cat-header" style="color:#8b7cf6">Review <span class="skill-cat-count">2</span></div><div class="skill-row" data-filter-text="receiving-code-review use when receiving code review feedback, before implementing suggestions, especially if feedback see review" onclick="showSkillModal(14)">
-  <span class="skill-name">/receiving-code-review</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when receiving code review feedback, before implementing suggestions, especially if feedback see</span>
+  <span class="skill-name">/receiving-code-review</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="requesting-code-review use when completing tasks, implementing major features, or before merging to verify work meets requi review" onclick="showSkillModal(15)">
-  <span class="skill-name">/requesting-code-review</span><span class="skill-src skill-src-superpowers">superpowers</span><span class="skill-desc">Use when completing tasks, implementing major features, or before merging to verify work meets requi</span>
+  <span class="skill-name">/requesting-code-review</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-cat-header" style="color:#f5c842">Style <span class="skill-cat-count">8</span></div><div class="skill-row" data-filter-text="caveman > style" onclick="showSkillModal(2)">
-  <span class="skill-name">/caveman</span><span class="skill-src skill-src-caveman">caveman</span><span class="skill-desc">></span>
+  <span class="skill-name">/caveman</span><span class="skill-src skill-src-caveman">caveman</span>
 </div><div class="skill-row" data-filter-text="caveman-compress > style" onclick="showSkillModal(3)">
-  <span class="skill-name">/caveman-compress</span><span class="skill-src skill-src-caveman">caveman</span><span class="skill-desc">></span>
+  <span class="skill-name">/caveman-compress</span><span class="skill-src skill-src-caveman">caveman</span>
 </div><div class="skill-row" data-filter-text="cavecrew > style" onclick="showSkillModal(4)">
-  <span class="skill-name">/cavecrew</span><span class="skill-src skill-src-caveman">caveman</span><span class="skill-desc">></span>
+  <span class="skill-name">/cavecrew</span><span class="skill-src skill-src-caveman">caveman</span>
 </div><div class="skill-row" data-filter-text="caveman-stats > style" onclick="showSkillModal(5)">
-  <span class="skill-name">/caveman-stats</span><span class="skill-src skill-src-caveman">caveman</span><span class="skill-desc">></span>
+  <span class="skill-name">/caveman-stats</span><span class="skill-src skill-src-caveman">caveman</span>
 </div><div class="skill-row" data-filter-text="compress > style" onclick="showSkillModal(6)">
-  <span class="skill-name">/compress</span><span class="skill-src skill-src-caveman">caveman</span><span class="skill-desc">></span>
+  <span class="skill-name">/compress</span><span class="skill-src skill-src-caveman">caveman</span>
 </div><div class="skill-row" data-filter-text="caveman-commit > style" onclick="showSkillModal(7)">
-  <span class="skill-name">/caveman-commit</span><span class="skill-src skill-src-caveman">caveman</span><span class="skill-desc">></span>
+  <span class="skill-name">/caveman-commit</span><span class="skill-src skill-src-caveman">caveman</span>
 </div><div class="skill-row" data-filter-text="caveman-help > style" onclick="showSkillModal(8)">
-  <span class="skill-name">/caveman-help</span><span class="skill-src skill-src-caveman">caveman</span><span class="skill-desc">></span>
+  <span class="skill-name">/caveman-help</span><span class="skill-src skill-src-caveman">caveman</span>
 </div><div class="skill-row" data-filter-text="caveman-review > style" onclick="showSkillModal(9)">
-  <span class="skill-name">/caveman-review</span><span class="skill-src skill-src-caveman">caveman</span><span class="skill-desc">></span>
+  <span class="skill-name">/caveman-review</span><span class="skill-src skill-src-caveman">caveman</span>
 </div><div class="skill-cat-header" style="color:#4ade80">Workspace <span class="skill-cat-count">2</span></div><div class="skill-row" data-filter-text="apply  workspace" onclick="showSkillModal(0)">
   <span class="skill-name">/apply</span>
 </div><div class="skill-row" data-filter-text="publish  workspace" onclick="showSkillModal(1)">
@@ -840,11 +840,11 @@ body {
         <div class="stat-label">Input Tokens</div>
       </div>
       <div class="stat-card green">
-        <div class="stat-val">7160k</div>
+        <div class="stat-val">7161k</div>
         <div class="stat-label">Output Tokens</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val">72</div>
+        <div class="stat-val">73</div>
         <div class="stat-label">Log Files</div>
       </div>
       <div class="stat-card">
@@ -876,7 +876,7 @@ body {
         <div class="chart-title">Top Models Used</div>
         <table class="data-table">
           <thead><tr><th>Model</th><th>Events</th></tr></thead>
-          <tbody><tr><td class='mono'>sonnet-4-6</td><td>18,648</td></tr><tr><td class='mono'>haiku-4-5-20251001</td><td>1,583</td></tr><tr><td class='mono'>opus-4-6</td><td>96</td></tr><tr><td class='mono'><synthetic></td><td>20</td></tr></tbody>
+          <tbody><tr><td class='mono'>sonnet-4-6</td><td>18,655</td></tr><tr><td class='mono'>haiku-4-5-20251001</td><td>1,583</td></tr><tr><td class='mono'>opus-4-6</td><td>96</td></tr><tr><td class='mono'><synthetic></td><td>20</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -954,6 +954,13 @@ body {
     </div>
     <div class="panel-scroll" style="padding:10px 14px">
       
+          <div class="prompt-row" data-filter-text="need not show description for skills, its too long and anyway on click we will be able to find it claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 12:29</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Need not show description for skills, Its too long and anyway on click we will be able to find it</div>
+          </div>
           <div class="prompt-row" data-filter-text="also can you make the panels and content in them responsive, with cursor click and drag i should be able to increase or  claude-professional">
             <div class="prompt-meta">
               <span class="prompt-time">05-11 12:25</span>
@@ -1089,13 +1096,6 @@ Either this page is private or doesn't exist.</div>
             </div>
             <div class="prompt-text">continue</div>
           </div>
-          <div class="prompt-row" data-filter-text="i need to have a daily log since all the work related stuff and ai learnings i'll be doing here in claude-professional,  claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 10:59</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">I need to have a daily log since all the work related stuff and AI learnings I'll be doing here in claude-professional, </div>
-          </div>
     </div>
   </div>
 
@@ -1215,7 +1215,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 2168],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 2194],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -1230,7 +1230,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 3684, 1887, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 3710, 1887, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
