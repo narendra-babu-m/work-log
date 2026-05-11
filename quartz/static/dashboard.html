@@ -211,6 +211,7 @@ body {
   transition: border-color 0.15s, background 0.15s;
 }
 .card:hover { border-color: var(--border2); background: var(--surface2); }
+.card[onclick] { cursor: pointer; }
 .card-icon {
   width: 32px; height: 32px;
   background: linear-gradient(135deg, rgba(217,119,87,0.15), rgba(139,124,246,0.15));
@@ -359,9 +360,109 @@ body {
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ─── Modal ──────────────────────────────────────────── */
+#modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+#modal-overlay.open { display: flex; }
+#modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  width: min(520px, 92vw);
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  animation: modal-in 0.15s ease;
+}
+@keyframes modal-in {
+  from { transform: scale(0.95) translateY(8px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+#modal-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 12px;
+}
+#modal-icon {
+  width: 36px; height: 36px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(217,119,87,0.2), rgba(139,124,246,0.2));
+  border: 1px solid rgba(217,119,87,0.3);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+#modal-title {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  line-height: 1.2;
+}
+#modal-subtitle {
+  font-size: 12px; color: var(--text-dim); margin-top: 2px;
+}
+#modal-close {
+  margin-left: auto; background: none; border: none;
+  color: var(--text-faint); font-size: 18px; cursor: pointer;
+  padding: 0 0 0 12px; line-height: 1;
+  transition: color 0.15s;
+}
+#modal-close:hover { color: var(--text); }
+#modal-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+}
+.modal-row {
+  display: flex; gap: 10px; margin-bottom: 10px;
+  align-items: flex-start;
+}
+.modal-label {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--text-faint); padding-top: 2px;
+  width: 72px; flex-shrink: 0;
+}
+.modal-value {
+  font-size: 12px; color: var(--text);
+  font-family: var(--mono);
+  background: var(--surface2); border: 1px solid var(--border);
+  padding: 5px 9px; border-radius: 5px;
+  flex: 1; word-break: break-all; line-height: 1.5;
+}
+.modal-pre {
+  font-size: 11px; font-family: var(--mono); color: var(--text-dim);
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px;
+  white-space: pre-wrap; word-break: break-word;
+  max-height: 300px; overflow-y: auto; line-height: 1.5;
+  width: 100%;
+}
 </style>
 </head>
 <body>
+
+<!-- ─── Modal ───────────────────────────────────────────── -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal-box">
+    <div id="modal-header">
+      <div id="modal-icon">⬡</div>
+      <div>
+        <div id="modal-title"></div>
+        <div id="modal-subtitle"></div>
+      </div>
+      <button id="modal-close" onclick="closeModalNow()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
 
 <!-- ─── Header ──────────────────────────────────────────── -->
 <div id="header">
@@ -372,7 +473,7 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 11:48</span>
+  <span class="timestamp">Generated 2026-05-11 11:53</span>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
 
@@ -405,35 +506,35 @@ body {
     </div>
     <div class="panel-scroll">
       
-        <div class="card mcp-card" data-filter-text="dm-pod2-mcp node">
+        <div class="card mcp-card" data-filter-text="dm-pod2-mcp sap dmc pod 2.0 design info & api reference" onclick="showMcpModal('dm-pod2-mcp')">
           <div class="card-icon">⬡</div>
           <div class="card-body">
             <div class="card-title">dm-pod2-mcp</div>
-            <div class="card-sub">node /Users/I576292/Library/CloudStorage/OneDrive-SAPSE/Projects/</div>
+            <div class="card-sub">SAP DMC Pod 2.0 design info & API reference</div>
           </div>
           <div class="card-badge active">active</div>
         </div>
-        <div class="card mcp-card" data-filter-text="@ui5/mcp-server npx">
+        <div class="card mcp-card" data-filter-text="@ui5/mcp-server ui5 control discovery" onclick="showMcpModal('@ui5/mcp-server')">
           <div class="card-icon">⬡</div>
           <div class="card-body">
             <div class="card-title">@ui5/mcp-server</div>
-            <div class="card-sub">npx @ui5/mcp-server</div>
+            <div class="card-sub">UI5 control discovery</div>
           </div>
           <div class="card-badge active">active</div>
         </div>
-        <div class="card mcp-card" data-filter-text="cds-mcp npx">
+        <div class="card mcp-card" data-filter-text="cds-mcp mcp server" onclick="showMcpModal('cds-mcp')">
           <div class="card-icon">⬡</div>
           <div class="card-body">
             <div class="card-title">cds-mcp</div>
-            <div class="card-sub">npx -y @cap-js/mcp-server</div>
+            <div class="card-sub">MCP server</div>
           </div>
           <div class="card-badge active">active</div>
         </div>
-        <div class="card mcp-card" data-filter-text="gitnexus /opt/homebrew/bin/gitnexus">
+        <div class="card mcp-card" data-filter-text="gitnexus mcp server" onclick="showMcpModal('gitnexus')">
           <div class="card-icon">⬡</div>
           <div class="card-body">
             <div class="card-title">gitnexus</div>
-            <div class="card-sub">/opt/homebrew/bin/gitnexus mcp</div>
+            <div class="card-sub">MCP server</div>
           </div>
           <div class="card-badge active">active</div>
         </div>
@@ -493,6 +594,14 @@ body {
               <span class="badge badge-priv">private</span>
             </div>
             <div class="activity-topic">11 33</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="11 48 2026-05-11">
+            <div class="activity-meta">
+              <span class="activity-date">May 11</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">11 48</div>
             
           </div>
           <div class="activity-row" data-filter-text="00 39 2026-05-10">
@@ -631,14 +740,6 @@ body {
             <div class="activity-topic">14 13</div>
             
           </div>
-          <div class="activity-row" data-filter-text="14 48 2026-05-08">
-            <div class="activity-meta">
-              <span class="activity-date">May 8</span>
-              <span class="badge badge-priv">private</span>
-            </div>
-            <div class="activity-topic">14 48</div>
-            
-          </div>
       </div>
     </div>
   </div>
@@ -666,7 +767,7 @@ body {
         <div class="stat-label">Output Tokens</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val">63</div>
+        <div class="stat-val">64</div>
         <div class="stat-label">Log Files</div>
       </div>
       <div class="stat-card">
@@ -689,13 +790,13 @@ body {
         <thead><tr><th>Event</th><th>Command</th></tr></thead>
         <tbody id="hooks-tbody">
           
-          <tr data-filter-text="sessionstart {'hooks': [{'type': 'command', 'command': 'node "/users/i576292/.claude/hooks/caveman-activate.js"', 'timeout': 5, 'statusmessage': 'loading caveman mode...'}]}">
+          <tr data-filter-text="sessionstart {'hooks': [{'type': 'command', 'command': 'node "/users/i576292/.claude/hooks/caveman-activate.js"', 'timeout': 5, 'statusmessage': 'loading caveman mode...'}]}" onclick="showHookModal(0)" style="cursor:pointer">
             <td><span class="badge badge-event">SessionStart</span></td>
-            <td class="mono truncate">{'hooks': [{'type': 'command', 'command': 'node "/Users/I576292/.claude/hooks/ca</td>
+            <td>mode...'}]}</td>
           </tr>
-          <tr data-filter-text="userpromptsubmit {'hooks': [{'type': 'command', 'command': 'node "/users/i576292/.claude/hooks/caveman-mode-tracker.js"', 'timeout': 5, 'statusmessage': 'tracking caveman mode...'}]}">
+          <tr data-filter-text="userpromptsubmit {'hooks': [{'type': 'command', 'command': 'node "/users/i576292/.claude/hooks/caveman-mode-tracker.js"', 'timeout': 5, 'statusmessage': 'tracking caveman mode...'}]}" onclick="showHookModal(1)" style="cursor:pointer">
             <td><span class="badge badge-event">UserPromptSubmit</span></td>
-            <td class="mono truncate">{'hooks': [{'type': 'command', 'command': 'node "/Users/I576292/.claude/hooks/ca</td>
+            <td>mode...'}]}</td>
           </tr>
         </tbody>
       </table>
@@ -709,7 +810,7 @@ body {
       <span class="panel-count">2</span>
     </div>
     <div class="chips">
-      <span class="chip">publish</span><span class="chip">apply</span>
+      <span class="chip" onclick="showSkillModal(0)" title="You are processing an `/apply` command. The user has just applied a concept from">apply</span><span class="chip" onclick="showSkillModal(1)" title="Publish professional work log to https://narendra-babu-m.github.io/work-log">publish</span>
     </div>
   </div>
 
@@ -739,7 +840,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 1051],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 1171],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -754,7 +855,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 2567, 1887, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 2687, 1887, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
@@ -801,12 +902,68 @@ document.addEventListener('keydown', e => {
     document.getElementById('global-search').select();
   }
   if (e.key === 'Escape') {
+    if (document.getElementById('modal-overlay').classList.contains('open')) {
+      closeModalNow();
+      return;
+    }
     const gs = document.getElementById('global-search');
     gs.value = '';
     globalSearch('');
     gs.blur();
   }
 });
+
+// ─── Modal data ──────────────────────────────────────────────────────────────
+const MCP_DATA = {"dm-pod2-mcp": {"command": "node", "args": ["/Users/I576292/Library/CloudStorage/OneDrive-SAPSE/Projects/Work/POD2.0/04-dm-pod2-mcp/build/index.js"], "env": [], "purpose": "SAP DMC Pod 2.0 design info & API reference"}, "@ui5/mcp-server": {"command": "npx", "args": ["@ui5/mcp-server"], "env": [], "purpose": "UI5 control discovery"}, "cds-mcp": {"command": "npx", "args": ["-y", "@cap-js/mcp-server"], "env": [], "purpose": "MCP server"}, "gitnexus": {"command": "/opt/homebrew/bin/gitnexus", "args": ["mcp"], "env": [], "purpose": "MCP server"}};
+const HOOK_DATA = [{"event": "SessionStart", "command": "{'hooks': [{'type': 'command', 'command': 'node \"/Users/I576292/.claude/hooks/caveman-activate.js\"', 'timeout': 5, 'statusMessage': 'Loading caveman mode...'}]}"}, {"event": "UserPromptSubmit", "command": "{'hooks': [{'type': 'command', 'command': 'node \"/Users/I576292/.claude/hooks/caveman-mode-tracker.js\"', 'timeout': 5, 'statusMessage': 'Tracking caveman mode...'}]}"}];
+const SKILL_DATA = [{"name": "apply", "desc": "You are processing an `/apply` command. The user has just applied a concept from", "content": "You are processing an `/apply` command. The user has just applied a concept from their knowledge graph to real work.\n\n## What to do\n\n1. **Parse the node_id** from the user's message. They may say:\n   - `apply context_engineering` \u2192 node_id = `context_engineering`\n   - `apply context engineering` \u2192 node_id = `context_engineering` (normalise spaces to underscores)\n   - `I applied context_engineering today to X` \u2192 extract node_id\n\n2. **Find the note** at:\n   `~/Library/CloudStorage/OneDrive-SAPSE/Vaults/ObsidianBrain-Professional/Knowledge-Graph/nodes/<node_id>.md`\n\n3. **Read the current frontmatter** \u2014 extract `apply_score`, `freq_score`, `total_strength`.\n\n4. **Update the frontmatter** in-place:\n   - `apply_score += 1`\n   - `total_strength = freq_score + (apply_score \u00d7 3)`\n   - `last_seen = today's date (YYYY-MM-DD)`\n   - Update `tags`: replace old strength tag (core_node/growing_node/weak_node/seed_node) with new one\n     - total_strength >= 10 \u2192 `core_node`\n     - total_strength 5\u20139  \u2192 `growing_node`\n     - total_strength 1\u20134  \u2192 `weak_node`\n     - total_strength 0    \u2192 `seed_node`\n\n5. **Ask the user** (briefly): \"What did you apply it to? (1 sentence \u2014 I'll add it to the Applied section)\"\n   Then append to the note body under `## How I've applied it`:\n   ```\n   - YYYY-MM-DD: [their 1-sentence description]\n   ```\n\n6. **Report back**:\n   ```\n   \u2713 apply_score bumped: context_engineering\n     apply_score: 1 \u2192 2\n     total_strength: 4 \u2192 7  (growing_node)\n   ```\n\n## Strength formula reminder\n`total_strength = freq_score + (apply_score \u00d7 3)`\n"}, {"name": "publish", "desc": "Publish professional work log to https://narendra-babu-m.github.io/work-log", "content": "# /publish skill\n\nPublish professional work log to https://narendra-babu-m.github.io/work-log\n\n## What this does\n\n1. Runs `python3 scripts/publish.py` from `claude-professional/`\n   - Reads `memory/sessions/` \u2014 extracts `## Public Summary` from each session\n   - Generates log pages in `~/work-log/content/log/`\n   - Syncs `content/sprints/`, `content/learnings/`, `content/org-context/`\n   - Captures Claude OS snapshot (MCPs, hooks, usage stats)\n   - Updates home page with latest sprint progress and recent entries\n2. Show the user a summary of what was generated\n3. Stage, commit, and push `~/work-log` \u2192 GitHub Actions auto-deploys\n\n## Steps to execute\n\n```bash\n# Step 1: Build content\ncd ~/claude-professional && python3 scripts/publish.py\n\n# Step 2: Review generated content\nls ~/work-log/content/log/ 2>/dev/null\n\n# Step 3: Commit and push work-log\ncd ~/work-log && git add . && git commit -m \"publish: $(date +%F)\" && git push\n\n# Step 4: Confirm deploy URL\necho \"Deploying to: https://narendra-babu-m.github.io/work-log\"\necho \"GitHub Actions: https://github.com/narendra-babu-m/work-log/actions\"\n```\n\n## Options\n\n- `--dry-run` \u2014 preview without writing files: `python3 scripts/publish.py --dry-run`\n- `--since YYYY-MM-DD` \u2014 only process sessions after a date\n- `--no-claude-os` \u2014 skip ccinv/usage snapshot (faster)\n\n## Workflow\n"}];
+
+function openModal(icon, title, subtitle, bodyHtml) {
+  document.getElementById('modal-icon').textContent = icon;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-subtitle').textContent = subtitle;
+  document.getElementById('modal-body').innerHTML = bodyHtml;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalNow();
+}
+function closeModalNow() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function row(label, value) {
+  return `<div class="modal-row"><span class="modal-label">${label}</span><span class="modal-value">${value}</span></div>`;
+}
+
+function showMcpModal(name) {
+  const d = MCP_DATA[name];
+  if (!d) return;
+  const args = d.args.length ? d.args.join(' ') : '—';
+  const env = d.env.length ? d.env.join(', ') : '—';
+  const body = row('Purpose', d.purpose)
+             + row('Command', d.command)
+             + row('Args', args)
+             + row('Env keys', env);
+  openModal('⬡', name, 'MCP Server', body);
+}
+
+function showHookModal(idx) {
+  const d = HOOK_DATA[idx];
+  if (!d) return;
+  const body = row('Event', d.event)
+             + `<div class="modal-row"><span class="modal-label">Command</span><pre class="modal-pre">${d.command}</pre></div>`;
+  openModal('⚙', d.event, 'Hook', body);
+}
+
+function showSkillModal(idx) {
+  const d = SKILL_DATA[idx];
+  if (!d) return;
+  const body = `<div class="modal-row"><span class="modal-label">Desc</span><span class="modal-value">${d.desc || '—'}</span></div>`
+             + `<div class="modal-row" style="align-items:flex-start"><span class="modal-label">Content</span><pre class="modal-pre">${d.content}</pre></div>`;
+  openModal('/', d.name, 'Skill', body);
+}
 </script>
 </body>
 </html>
