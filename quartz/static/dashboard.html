@@ -224,13 +224,9 @@ body {
 .panel-header[data-collapsible].collapsed::after {
   transform: rotate(-90deg);
 }
-/* Hide all siblings after a collapsed header until the next panel-header */
-.panel-header.collapsed ~ * {
+/* Hide content within a collapsed section — scoped to wrapper */
+.collapsible-section > .panel-header.collapsed ~ * {
   display: none !important;
-}
-/* But keep the next panel-header visible (for stacked headers like Models+Hooks) */
-.panel-header.collapsed ~ .panel-header {
-  display: flex !important;
 }
 .panel-title {
   font-size: 11px; font-weight: 600; text-transform: uppercase;
@@ -837,7 +833,7 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 15:06</span>
+  <span class="timestamp">Generated 2026-05-11 15:10</span>
   <button class="refresh-btn" onclick="resetLayout()" title="Reset panel sizes to default" style="margin-right:4px">⊞ Reset</button>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
@@ -849,30 +845,33 @@ body {
   <div class="col-wrap" id="col-1">
     <!-- Sprint -->
     <div class="panel" id="panel-sprint">
-      <div class="panel-header" data-collapsible>
-        <span class="panel-title">Current Sprint</span>
-      </div>
-      <div class="panel-scroll">
-        
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">Current Sprint</span>
+        </div>
+        <div class="panel-scroll">
+          
         <div class="sprint-goal">[One-line sprint goal]</div>
         <div class="sprint-meta">YYYY-MM-DD → YYYY-MM-DD</div>
         <div class="progress-wrap">
           <div class="progress-bar" style="width:0%"></div>
         </div>
         <div class="progress-label">0% complete</div>
+        </div>
       </div>
     </div>
     <div class="resize-handle row-handle" data-col="1" data-idx="0"></div>
     <!-- MCPs -->
     <div class="panel" id="panel-mcps">
-      <div class="panel-header" data-collapsible>
-        <span class="panel-title">MCP Servers</span>
-        <span class="panel-count" id="mcp-count">4</span>
-        <div class="panel-spacer"></div>
-        <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-mcps', this.value, '.mcp-card')">
-      </div>
-      <div class="panel-scroll">
-        
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">MCP Servers</span>
+          <span class="panel-count" id="mcp-count">4</span>
+          <div class="panel-spacer"></div>
+          <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-mcps', this.value, '.mcp-card')">
+        </div>
+        <div class="panel-scroll">
+          
         <div class="card mcp-card" data-filter-text="dm-pod2-mcp sap dmc pod 2.0 design info & api reference" onclick="showMcpModal('dm-pod2-mcp')">
           <div class="card-icon">⬡</div>
           <div class="card-body">
@@ -905,19 +904,21 @@ body {
           </div>
           <div class="card-badge active">active</div>
         </div>
+        </div>
       </div>
     </div>
     <div class="resize-handle row-handle" data-col="1" data-idx="1"></div>
     <!-- Skills -->
     <div class="panel" id="panel-skills">
-      <div class="panel-header" data-collapsible>
-        <span class="panel-title">Skills</span>
-        <span class="panel-count">24</span>
-        <div class="panel-spacer"></div>
-        <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-skills', this.value, '.skill-row')">
-      </div>
-      <div class="panel-scroll">
-        <div class="skill-cat-header" style="color:#d97757">Workflow <span class="skill-cat-count">5</span></div><div class="skill-row" data-filter-text="brainstorming you must use this before any creative work - creating features, building components, adding function workflow" onclick="showSkillModal(10)">
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">Skills</span>
+          <span class="panel-count">24</span>
+          <div class="panel-spacer"></div>
+          <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-skills', this.value, '.skill-row')">
+        </div>
+        <div class="panel-scroll">
+          <div class="skill-cat-header" style="color:#d97757">Workflow <span class="skill-cat-count">5</span></div><div class="skill-row" data-filter-text="brainstorming you must use this before any creative work - creating features, building components, adding function workflow" onclick="showSkillModal(10)">
   <span class="skill-name">/brainstorming</span><span class="skill-src skill-src-superpowers">superpowers</span>
 </div><div class="skill-row" data-filter-text="executing-plans use when you have a written implementation plan to execute in a separate session with review checkpo workflow" onclick="showSkillModal(12)">
   <span class="skill-name">/executing-plans</span><span class="skill-src skill-src-superpowers">superpowers</span>
@@ -966,6 +967,7 @@ body {
 </div><div class="skill-row" data-filter-text="publish  workspace" onclick="showSkillModal(1)">
   <span class="skill-name">/publish</span>
 </div>
+        </div>
       </div>
     </div>
   </div><!-- /#col-1 -->
@@ -974,10 +976,11 @@ body {
   <div class="col-wrap" id="col-2">
     <!-- Stats -->
     <div class="panel" id="panel-stats">
-      <div class="panel-header" data-collapsible>
-        <span class="panel-title">Stats</span>
-      </div>
-      <div class="stat-grid">
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">Stats</span>
+        </div>
+        <div class="stat-grid">
         <div class="stat-card accent">
           <div class="stat-val">0</div>
           <div class="stat-label">Sessions</div>
@@ -991,11 +994,11 @@ body {
           <div class="stat-label">Input Tokens</div>
         </div>
         <div class="stat-card green">
-          <div class="stat-val">7240k</div>
+          <div class="stat-val">7247k</div>
           <div class="stat-label">Output Tokens</div>
         </div>
         <div class="stat-card accent">
-          <div class="stat-val">3340</div>
+          <div class="stat-val">3457</div>
           <div class="stat-label">Today</div>
         </div>
         <div class="stat-card teal">
@@ -1003,13 +1006,15 @@ body {
           <div class="stat-label">Cache ROI</div>
         </div>
       </div>
+      </div><!-- /collapsible-section -->
     </div>
     <div class="resize-handle row-handle" data-col="2" data-idx="0"></div>
     <!-- Charts -->
     <div class="panel" id="panel-charts">
-      <div class="panel-header" data-collapsible>
-        <span class="panel-title">Activity</span>
-      </div>
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">Activity</span>
+        </div>
       <div class="panel-scroll">
         <div class="chart-wrap">
           <div class="charts-row">
@@ -1034,14 +1039,14 @@ body {
           <div class="insight-card">
             <div class="insight-icon">⚡</div>
             <div class="insight-body">
-              <div class="insight-val">3034</div>
+              <div class="insight-val">3040</div>
               <div class="insight-label">Avg events / active day</div>
             </div>
           </div>
           <div class="insight-card">
             <div class="insight-icon">💾</div>
             <div class="insight-body">
-              <div class="insight-val">1258412k</div>
+              <div class="insight-val">1264435k</div>
               <div class="insight-label">Cache tokens read (99% ROI)</div>
             </div>
           </div>
@@ -1054,6 +1059,7 @@ body {
           </div>
         </div>
       </div>
+      </div><!-- /collapsible-section -->
     </div>
   </div><!-- /#col-2 -->
 
@@ -1061,20 +1067,23 @@ body {
   <div class="col-wrap" id="col-3">
     <!-- Hooks (includes Models Used at top) -->
     <div class="panel" id="panel-hooks">
-      <div class="panel-header" data-collapsible>
-        <span class="panel-title">Models Used</span>
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">Models Used</span>
+        </div>
+        <div class="model-mini-wrap">
+          <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">18,988</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
+        </div>
       </div>
-      <div class="model-mini-wrap">
-        <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">18,949</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
-      </div>
-      <div class="panel-header" data-collapsible style="border-top:1px solid var(--border)">
-        <span class="panel-title">Hooks</span>
-        <span class="panel-count">4 active / 7</span>
-        <div class="panel-spacer"></div>
-        <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-hooks', this.value, '.hook-row')">
-      </div>
-      <div class="panel-scroll" style="padding:6px 14px">
-        
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible style="border-top:1px solid var(--border)">
+          <span class="panel-title">Hooks</span>
+          <span class="panel-count">4 active / 7</span>
+          <div class="panel-spacer"></div>
+          <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-hooks', this.value, '.hook-row')">
+        </div>
+        <div class="panel-scroll" style="padding:6px 14px">
+          
           <div class="hook-row hook-active" data-filter-text="sessionstart caveman-activate.js" onclick="showHookModal(0)">
             <div class="hook-event-wrap">
               <span class="hook-dot active"></span>
@@ -1131,19 +1140,28 @@ body {
             </div>
             <span class="hook-script inactive">—</span>
           </div>
+        </div>
       </div>
     </div>
     <div class="resize-handle row-handle" data-col="3" data-idx="0"></div>
     <!-- Recent Prompts -->
     <div class="panel" id="panel-prompts">
-      <div class="panel-header" data-collapsible>
-        <span class="panel-title">Recent Prompts</span>
-        <span class="panel-count">20</span>
-        <div class="panel-spacer"></div>
-        <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-prompts', this.value, '.prompt-row')">
-      </div>
-      <div class="panel-scroll" style="padding:10px 14px">
-        
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">Recent Prompts</span>
+          <span class="panel-count">20</span>
+          <div class="panel-spacer"></div>
+          <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-prompts', this.value, '.prompt-row')">
+        </div>
+        <div class="panel-scroll" style="padding:10px 14px">
+          
+          <div class="prompt-row" data-filter-text="there is a bug only if i expand models used i can able to expands hooks and see its content claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 15:07</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">There is a bug only if I expand models used I can able to expands hooks and see its content</div>
+          </div>
           <div class="prompt-row" data-filter-text="skills and plugins are getting adjusted together, mcp activity recent prompts are getting adjusted together i want every claude-professional">
             <div class="prompt-meta">
               <span class="prompt-time">05-11 15:02</span>
@@ -1279,26 +1297,21 @@ the place isn't enough</div>
             </div>
             <div class="prompt-text">Also I think I don't need worklog are there more details which can be added to this dashboard, quick reference can be be</div>
           </div>
-          <div class="prompt-row" data-filter-text="also incorporate the claude cheat sheet within the given areas, research and generates ideas on how to do it, be cohesiv claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 12:03</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Also incorporate the claude cheat sheet within the given areas, research and generates ideas on how to do it, be cohesiv</div>
-          </div>
+        </div>
       </div>
     </div>
     <div class="resize-handle row-handle" data-col="3" data-idx="1"></div>
     <!-- Plugins -->
     <div class="panel" id="panel-plugins">
-      <div class="panel-header" data-collapsible>
-        <span class="panel-title">Plugins</span>
-        <span class="panel-count">6</span>
-        <div class="panel-spacer"></div>
-        <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-plugins', this.value, '.plugin-card')">
-      </div>
-      <div class="panel-scroll" style="padding:8px 12px">
-        
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">Plugins</span>
+          <span class="panel-count">6</span>
+          <div class="panel-spacer"></div>
+          <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-plugins', this.value, '.plugin-card')">
+        </div>
+        <div class="panel-scroll" style="padding:8px 12px">
+          
           <div class="plugin-card" data-filter-text="caveman global user" onclick="showPluginModal(0)">
             <div class="plugin-name">caveman</div>
             <span class="badge badge-event">user</span>
@@ -1323,6 +1336,7 @@ the place isn't enough</div>
             <div class="plugin-name">warp</div>
             <span class="badge badge-event">user</span>
           </div>
+        </div>
       </div>
     </div>
   </div><!-- /#col-3 -->
@@ -1407,7 +1421,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3340],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3457],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -1422,7 +1436,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 4012, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 4129, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
