@@ -95,8 +95,8 @@ body {
   position: fixed;
   top: 48px; left: 0; right: 0; bottom: 0;
   display: grid;
-  grid-template-columns: 280px 1fr 320px;
-  grid-template-rows: auto auto 1fr;
+  grid-template-columns: 280px 1fr 300px;
+  grid-template-rows: auto 1fr auto;
   gap: 1px;
   background: var(--border);
   overflow: hidden;
@@ -147,51 +147,51 @@ body {
 .panel-filter::placeholder { color: var(--text-faint); }
 
 /* ─── Grid Areas ─────────────────────────────────────── */
-/* Col 1: Sprint + MCPs */
+/* Col 1: Sprint (top) → MCPs → Skills (bottom) */
 #panel-sprint {
   grid-column: 1; grid-row: 1;
 }
 #panel-mcps {
-  grid-column: 1; grid-row: 2 / 4;
-}
-
-/* Col 2: Charts (top) + Activity (bottom) */
-#panel-charts {
-  grid-column: 2; grid-row: 1 / 3;
-}
-#panel-activity {
-  grid-column: 2; grid-row: 3;
-}
-
-/* Col 3: Stats + Hooks + Skills */
-#panel-stats {
-  grid-column: 3; grid-row: 1;
-}
-#panel-hooks {
-  grid-column: 3; grid-row: 2;
+  grid-column: 1; grid-row: 2;
 }
 #panel-skills {
+  grid-column: 1; grid-row: 3;
+}
+
+/* Col 2: Stats row (top) → Charts fill remaining */
+#panel-stats {
+  grid-column: 2; grid-row: 1;
+}
+#panel-charts {
+  grid-column: 2; grid-row: 2 / 4;
+}
+
+/* Col 3: Hooks (top half) → Activity (bottom half) */
+#panel-hooks {
+  grid-column: 3; grid-row: 1 / 3;
+}
+#panel-activity {
   grid-column: 3; grid-row: 3;
 }
 
 /* ─── Stat Cards ─────────────────────────────────────── */
 .stat-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 10px; padding: 14px;
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  gap: 8px; padding: 10px 14px;
 }
 .stat-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 12px 14px;
+  padding: 10px 10px;
 }
 .stat-val {
-  font-size: 22px; font-weight: 700;
+  font-size: 18px; font-weight: 700;
   font-family: var(--mono);
   color: var(--text); line-height: 1.1;
 }
 .stat-label {
-  font-size: 10px; color: var(--text-dim);
+  font-size: 9px; color: var(--text-dim);
   text-transform: uppercase; letter-spacing: 0.5px;
   margin-top: 3px;
 }
@@ -473,14 +473,14 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 11:53</span>
+  <span class="timestamp">Generated 2026-05-11 12:01</span>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
 
 <!-- ─── Dashboard Grid ──────────────────────────────────── -->
 <div id="dashboard">
 
-  <!-- ─── Col 1 Row 1: Sprint ─────────────────────────── -->
+  <!-- ─── Col 1: Sprint ───────────────────────────────── -->
   <div class="panel" id="panel-sprint">
     <div class="panel-header">
       <span class="panel-title">Current Sprint</span>
@@ -496,7 +496,7 @@ body {
     </div>
   </div>
 
-  <!-- ─── Col 1 Row 2+: MCPs ──────────────────────────── -->
+  <!-- ─── Col 1: MCPs ──────────────────────────────────── -->
   <div class="panel" id="panel-mcps">
     <div class="panel-header">
       <span class="panel-title">MCP Servers</span>
@@ -541,7 +541,51 @@ body {
     </div>
   </div>
 
-  <!-- ─── Col 2 Row 1+2: Charts ───────────────────────── -->
+  <!-- ─── Col 1: Skills ────────────────────────────────── -->
+  <div class="panel" id="panel-skills">
+    <div class="panel-header">
+      <span class="panel-title">Skills</span>
+      <span class="panel-count">24</span>
+    </div>
+    <div class="chips">
+      <span class="chip" onclick="showSkillModal(0)" title="You are processing an `/apply` command. The user has just applied a concept from">apply</span><span class="chip" onclick="showSkillModal(1)" title="Publish professional work log to https://narendra-babu-m.github.io/work-log">publish</span><span class="chip" onclick="showSkillModal(2)" title="---">caveman</span><span class="chip" onclick="showSkillModal(3)" title="---">caveman-compress</span><span class="chip" onclick="showSkillModal(4)" title="---">cavecrew</span><span class="chip" onclick="showSkillModal(5)" title="---">caveman-stats</span><span class="chip" onclick="showSkillModal(6)" title="---">compress</span><span class="chip" onclick="showSkillModal(7)" title="---">caveman-commit</span><span class="chip" onclick="showSkillModal(8)" title="---">caveman-help</span><span class="chip" onclick="showSkillModal(9)" title="---">caveman-review</span><span class="chip" onclick="showSkillModal(10)" title="---">brainstorming</span><span class="chip" onclick="showSkillModal(11)" title="---">dispatching-parallel-agents</span><span class="chip" onclick="showSkillModal(12)" title="---">executing-plans</span><span class="chip" onclick="showSkillModal(13)" title="---">finishing-a-development-branch</span><span class="chip" onclick="showSkillModal(14)" title="---">receiving-code-review</span><span class="chip" onclick="showSkillModal(15)" title="---">requesting-code-review</span><span class="chip" onclick="showSkillModal(16)" title="---">subagent-driven-development</span><span class="chip" onclick="showSkillModal(17)" title="---">systematic-debugging</span><span class="chip" onclick="showSkillModal(18)" title="---">test-driven-development</span><span class="chip" onclick="showSkillModal(19)" title="---">using-git-worktrees</span><span class="chip" onclick="showSkillModal(20)" title="---">using-superpowers</span><span class="chip" onclick="showSkillModal(21)" title="---">verification-before-completion</span><span class="chip" onclick="showSkillModal(22)" title="---">writing-plans</span><span class="chip" onclick="showSkillModal(23)" title="---">writing-skills</span>
+    </div>
+  </div>
+
+  <!-- ─── Col 2: Stats row ─────────────────────────────── -->
+  <div class="panel" id="panel-stats">
+    <div class="panel-header">
+      <span class="panel-title">Stats</span>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card accent">
+        <div class="stat-val">0</div>
+        <div class="stat-label">Sessions</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-val">6</div>
+        <div class="stat-label">Active Days</div>
+      </div>
+      <div class="stat-card teal">
+        <div class="stat-val">6809k</div>
+        <div class="stat-label">Input Tokens</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-val">7109k</div>
+        <div class="stat-label">Output Tokens</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">68</div>
+        <div class="stat-label">Log Files</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">24</div>
+        <div class="stat-label">Skills</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Col 2: Charts ────────────────────────────────── -->
   <div class="panel" id="panel-charts">
     <div class="panel-header">
       <span class="panel-title">Activity</span>
@@ -563,13 +607,39 @@ body {
         <div class="chart-title">Top Models Used</div>
         <table class="data-table">
           <thead><tr><th>Model</th><th>Events</th></tr></thead>
-          <tbody><tr><td colspan='2' class='empty-state'>No data yet</td></tr></tbody>
+          <tbody><tr><td class='mono'>sonnet-4-6</td><td>18,437</td></tr><tr><td class='mono'>haiku-4-5-20251001</td><td>1,535</td></tr><tr><td class='mono'>opus-4-6</td><td>96</td></tr><tr><td class='mono'><synthetic></td><td>20</td></tr></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- ─── Col 2 Row 3: Activity Feed ──────────────────── -->
+  <!-- ─── Col 3: Hooks ─────────────────────────────────── -->
+  <div class="panel" id="panel-hooks">
+    <div class="panel-header">
+      <span class="panel-title">Hooks</span>
+      <span class="panel-count">2</span>
+      <div class="panel-spacer"></div>
+      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-hooks', this.value, 'tr[data-filter-text]')">
+    </div>
+    <div class="panel-scroll">
+      <table class="data-table">
+        <thead><tr><th>Event</th><th>Command</th></tr></thead>
+        <tbody id="hooks-tbody">
+          
+          <tr data-filter-text="sessionstart {'hooks': [{'type': 'command', 'command': 'node "/users/i576292/.claude/hooks/caveman-activate.js"', 'timeout': 5, 'statusmessage': 'loading caveman mode...'}]}" onclick="showHookModal(0)" style="cursor:pointer">
+            <td><span class="badge badge-event">SessionStart</span></td>
+            <td>mode...'}]}</td>
+          </tr>
+          <tr data-filter-text="userpromptsubmit {'hooks': [{'type': 'command', 'command': 'node "/users/i576292/.claude/hooks/caveman-mode-tracker.js"', 'timeout': 5, 'statusmessage': 'tracking caveman mode...'}]}" onclick="showHookModal(1)" style="cursor:pointer">
+            <td><span class="badge badge-event">UserPromptSubmit</span></td>
+            <td>mode...'}]}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─── Col 3: Work Log ──────────────────────────────── -->
   <div class="panel" id="panel-activity">
     <div class="panel-header">
       <span class="panel-title">Work Log</span>
@@ -602,6 +672,38 @@ body {
               <span class="badge badge-priv">private</span>
             </div>
             <div class="activity-topic">11 48</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="11 53 2026-05-11">
+            <div class="activity-meta">
+              <span class="activity-date">May 11</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">11 53</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="11 54 2026-05-11">
+            <div class="activity-meta">
+              <span class="activity-date">May 11</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">11 54</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="11 55 2026-05-11">
+            <div class="activity-meta">
+              <span class="activity-date">May 11</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">11 55</div>
+            
+          </div>
+          <div class="activity-row" data-filter-text="11 57 2026-05-11">
+            <div class="activity-meta">
+              <span class="activity-date">May 11</span>
+              <span class="badge badge-priv">private</span>
+            </div>
+            <div class="activity-topic">11 57</div>
             
           </div>
           <div class="activity-row" data-filter-text="00 39 2026-05-10">
@@ -708,109 +810,7 @@ body {
             <div class="activity-topic">13 20</div>
             
           </div>
-          <div class="activity-row" data-filter-text="13 28 2026-05-08">
-            <div class="activity-meta">
-              <span class="activity-date">May 8</span>
-              <span class="badge badge-priv">private</span>
-            </div>
-            <div class="activity-topic">13 28</div>
-            
-          </div>
-          <div class="activity-row" data-filter-text="13 49 2026-05-08">
-            <div class="activity-meta">
-              <span class="activity-date">May 8</span>
-              <span class="badge badge-priv">private</span>
-            </div>
-            <div class="activity-topic">13 49</div>
-            
-          </div>
-          <div class="activity-row" data-filter-text="14 12 2026-05-08">
-            <div class="activity-meta">
-              <span class="activity-date">May 8</span>
-              <span class="badge badge-priv">private</span>
-            </div>
-            <div class="activity-topic">14 12</div>
-            
-          </div>
-          <div class="activity-row" data-filter-text="14 13 2026-05-08">
-            <div class="activity-meta">
-              <span class="activity-date">May 8</span>
-              <span class="badge badge-priv">private</span>
-            </div>
-            <div class="activity-topic">14 13</div>
-            
-          </div>
       </div>
-    </div>
-  </div>
-
-  <!-- ─── Col 3 Row 1: Stats ──────────────────────────── -->
-  <div class="panel" id="panel-stats">
-    <div class="panel-header">
-      <span class="panel-title">Stats</span>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card accent">
-        <div class="stat-val">0</div>
-        <div class="stat-label">Sessions</div>
-      </div>
-      <div class="stat-card purple">
-        <div class="stat-val">6</div>
-        <div class="stat-label">Active Days</div>
-      </div>
-      <div class="stat-card teal">
-        <div class="stat-val">0k</div>
-        <div class="stat-label">Input Tokens</div>
-      </div>
-      <div class="stat-card green">
-        <div class="stat-val">0k</div>
-        <div class="stat-label">Output Tokens</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val">64</div>
-        <div class="stat-label">Log Files</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val">2</div>
-        <div class="stat-label">Skills</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ─── Col 3 Row 2: Hooks ──────────────────────────── -->
-  <div class="panel" id="panel-hooks">
-    <div class="panel-header">
-      <span class="panel-title">Hooks</span>
-      <span class="panel-count">2</span>
-      <div class="panel-spacer"></div>
-      <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-hooks', this.value, 'tr[data-filter-text]')">
-    </div>
-    <div class="panel-scroll">
-      <table class="data-table">
-        <thead><tr><th>Event</th><th>Command</th></tr></thead>
-        <tbody id="hooks-tbody">
-          
-          <tr data-filter-text="sessionstart {'hooks': [{'type': 'command', 'command': 'node "/users/i576292/.claude/hooks/caveman-activate.js"', 'timeout': 5, 'statusmessage': 'loading caveman mode...'}]}" onclick="showHookModal(0)" style="cursor:pointer">
-            <td><span class="badge badge-event">SessionStart</span></td>
-            <td>mode...'}]}</td>
-          </tr>
-          <tr data-filter-text="userpromptsubmit {'hooks': [{'type': 'command', 'command': 'node "/users/i576292/.claude/hooks/caveman-mode-tracker.js"', 'timeout': 5, 'statusmessage': 'tracking caveman mode...'}]}" onclick="showHookModal(1)" style="cursor:pointer">
-            <td><span class="badge badge-event">UserPromptSubmit</span></td>
-            <td>mode...'}]}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ─── Col 3 Row 3: Skills ─────────────────────────── -->
-  <div class="panel" id="panel-skills">
-    <div class="panel-header">
-      <span class="panel-title">Skills</span>
-      <span class="panel-count">2</span>
-    </div>
-    <div class="chips">
-      <span class="chip" onclick="showSkillModal(0)" title="You are processing an `/apply` command. The user has just applied a concept from">apply</span><span class="chip" onclick="showSkillModal(1)" title="Publish professional work log to https://narendra-babu-m.github.io/work-log">publish</span>
     </div>
   </div>
 
@@ -840,7 +840,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 1171],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 1372],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -855,7 +855,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 2687, 1887, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 2888, 1887, 2782, 3222, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
@@ -916,7 +916,7 @@ document.addEventListener('keydown', e => {
 // ─── Modal data ──────────────────────────────────────────────────────────────
 const MCP_DATA = {"dm-pod2-mcp": {"command": "node", "args": ["/Users/I576292/Library/CloudStorage/OneDrive-SAPSE/Projects/Work/POD2.0/04-dm-pod2-mcp/build/index.js"], "env": [], "purpose": "SAP DMC Pod 2.0 design info & API reference"}, "@ui5/mcp-server": {"command": "npx", "args": ["@ui5/mcp-server"], "env": [], "purpose": "UI5 control discovery"}, "cds-mcp": {"command": "npx", "args": ["-y", "@cap-js/mcp-server"], "env": [], "purpose": "MCP server"}, "gitnexus": {"command": "/opt/homebrew/bin/gitnexus", "args": ["mcp"], "env": [], "purpose": "MCP server"}};
 const HOOK_DATA = [{"event": "SessionStart", "command": "{'hooks': [{'type': 'command', 'command': 'node \"/Users/I576292/.claude/hooks/caveman-activate.js\"', 'timeout': 5, 'statusMessage': 'Loading caveman mode...'}]}"}, {"event": "UserPromptSubmit", "command": "{'hooks': [{'type': 'command', 'command': 'node \"/Users/I576292/.claude/hooks/caveman-mode-tracker.js\"', 'timeout': 5, 'statusMessage': 'Tracking caveman mode...'}]}"}];
-const SKILL_DATA = [{"name": "apply", "desc": "You are processing an `/apply` command. The user has just applied a concept from", "content": "You are processing an `/apply` command. The user has just applied a concept from their knowledge graph to real work.\n\n## What to do\n\n1. **Parse the node_id** from the user's message. They may say:\n   - `apply context_engineering` \u2192 node_id = `context_engineering`\n   - `apply context engineering` \u2192 node_id = `context_engineering` (normalise spaces to underscores)\n   - `I applied context_engineering today to X` \u2192 extract node_id\n\n2. **Find the note** at:\n   `~/Library/CloudStorage/OneDrive-SAPSE/Vaults/ObsidianBrain-Professional/Knowledge-Graph/nodes/<node_id>.md`\n\n3. **Read the current frontmatter** \u2014 extract `apply_score`, `freq_score`, `total_strength`.\n\n4. **Update the frontmatter** in-place:\n   - `apply_score += 1`\n   - `total_strength = freq_score + (apply_score \u00d7 3)`\n   - `last_seen = today's date (YYYY-MM-DD)`\n   - Update `tags`: replace old strength tag (core_node/growing_node/weak_node/seed_node) with new one\n     - total_strength >= 10 \u2192 `core_node`\n     - total_strength 5\u20139  \u2192 `growing_node`\n     - total_strength 1\u20134  \u2192 `weak_node`\n     - total_strength 0    \u2192 `seed_node`\n\n5. **Ask the user** (briefly): \"What did you apply it to? (1 sentence \u2014 I'll add it to the Applied section)\"\n   Then append to the note body under `## How I've applied it`:\n   ```\n   - YYYY-MM-DD: [their 1-sentence description]\n   ```\n\n6. **Report back**:\n   ```\n   \u2713 apply_score bumped: context_engineering\n     apply_score: 1 \u2192 2\n     total_strength: 4 \u2192 7  (growing_node)\n   ```\n\n## Strength formula reminder\n`total_strength = freq_score + (apply_score \u00d7 3)`\n"}, {"name": "publish", "desc": "Publish professional work log to https://narendra-babu-m.github.io/work-log", "content": "# /publish skill\n\nPublish professional work log to https://narendra-babu-m.github.io/work-log\n\n## What this does\n\n1. Runs `python3 scripts/publish.py` from `claude-professional/`\n   - Reads `memory/sessions/` \u2014 extracts `## Public Summary` from each session\n   - Generates log pages in `~/work-log/content/log/`\n   - Syncs `content/sprints/`, `content/learnings/`, `content/org-context/`\n   - Captures Claude OS snapshot (MCPs, hooks, usage stats)\n   - Updates home page with latest sprint progress and recent entries\n2. Show the user a summary of what was generated\n3. Stage, commit, and push `~/work-log` \u2192 GitHub Actions auto-deploys\n\n## Steps to execute\n\n```bash\n# Step 1: Build content\ncd ~/claude-professional && python3 scripts/publish.py\n\n# Step 2: Review generated content\nls ~/work-log/content/log/ 2>/dev/null\n\n# Step 3: Commit and push work-log\ncd ~/work-log && git add . && git commit -m \"publish: $(date +%F)\" && git push\n\n# Step 4: Confirm deploy URL\necho \"Deploying to: https://narendra-babu-m.github.io/work-log\"\necho \"GitHub Actions: https://github.com/narendra-babu-m/work-log/actions\"\n```\n\n## Options\n\n- `--dry-run` \u2014 preview without writing files: `python3 scripts/publish.py --dry-run`\n- `--since YYYY-MM-DD` \u2014 only process sessions after a date\n- `--no-claude-os` \u2014 skip ccinv/usage snapshot (faster)\n\n## Workflow\n"}];
+const SKILL_DATA = [{"name": "apply", "desc": "You are processing an `/apply` command. The user has just applied a concept from", "content": "You are processing an `/apply` command. The user has just applied a concept from their knowledge graph to real work.\n\n## What to do\n\n1. **Parse the node_id** from the user's message. They may say:\n   - `apply context_engineering` \u2192 node_id = `context_engineering`\n   - `apply context engineering` \u2192 node_id = `context_engineering` (normalise spaces to underscores)\n   - `I applied context_engineering today to X` \u2192 extract node_id\n\n2. **Find the note** at:\n   `~/Library/CloudStorage/OneDrive-SAPSE/Vaults/ObsidianBrain-Professional/Knowledge-Graph/nodes/<node_id>.md`\n\n3. **Read the current frontmatter** \u2014 extract `apply_score`, `freq_score`, `total_strength`.\n\n4. **Update the frontmatter** in-place:\n   - `apply_score += 1`\n   - `total_strength = freq_score + (apply_score \u00d7 3)`\n   - `last_seen = today's date (YYYY-MM-DD)`\n   - Update `tags`: replace old strength tag (core_node/growing_node/weak_node/seed_node) with new one\n     - total_strength >= 10 \u2192 `core_node`\n     - total_strength 5\u20139  \u2192 `growing_node`\n     - total_strength 1\u20134  \u2192 `weak_node`\n     - total_strength 0    \u2192 `seed_node`\n\n5. **Ask the user** (briefly): \"What did you apply it to? (1 sentence \u2014 I'll add it to the Applied section)\"\n   Then append to the note body under `## How I've applied it`:\n   ```\n   - YYYY-MM-DD: [their 1-sentence description]\n   ```\n\n6. **Report back**:\n   ```\n   \u2713 apply_score bumped: context_engineering\n     apply_score: 1 \u2192 2\n     total_strength: 4 \u2192 7  (growing_node)\n   ```\n\n## Strength formula reminder\n`total_strength = freq_score + (apply_score \u00d7 3)`\n"}, {"name": "publish", "desc": "Publish professional work log to https://narendra-babu-m.github.io/work-log", "content": "# /publish skill\n\nPublish professional work log to https://narendra-babu-m.github.io/work-log\n\n## What this does\n\n1. Runs `python3 scripts/publish.py` from `claude-professional/`\n   - Reads `memory/sessions/` \u2014 extracts `## Public Summary` from each session\n   - Generates log pages in `~/work-log/content/log/`\n   - Syncs `content/sprints/`, `content/learnings/`, `content/org-context/`\n   - Captures Claude OS snapshot (MCPs, hooks, usage stats)\n   - Updates home page with latest sprint progress and recent entries\n2. Show the user a summary of what was generated\n3. Stage, commit, and push `~/work-log` \u2192 GitHub Actions auto-deploys\n\n## Steps to execute\n\n```bash\n# Step 1: Build content\ncd ~/claude-professional && python3 scripts/publish.py\n\n# Step 2: Review generated content\nls ~/work-log/content/log/ 2>/dev/null\n\n# Step 3: Commit and push work-log\ncd ~/work-log && git add . && git commit -m \"publish: $(date +%F)\" && git push\n\n# Step 4: Confirm deploy URL\necho \"Deploying to: https://narendra-babu-m.github.io/work-log\"\necho \"GitHub Actions: https://github.com/narendra-babu-m/work-log/actions\"\n```\n\n## Options\n\n- `--dry-run` \u2014 preview without writing files: `python3 scripts/publish.py --dry-run`\n- `--since YYYY-MM-DD` \u2014 only process sessions after a date\n- `--no-claude-os` \u2014 skip ccinv/usage snapshot (faster)\n\n## Workflow\n"}, {"name": "caveman", "desc": "---", "content": "---\nname: caveman\ndescription: >\n  Ultra-compressed communication mode. Cuts token usage ~75% by speaking like caveman\n  while keeping full technical accuracy. Supports intensity levels: lite, full (default), ultra,\n  wenyan-lite, wenyan-full, wenyan-ultra.\n  Use when user says \"caveman mode\", \"talk like caveman\", \"use caveman\", \"less tokens\",\n  \"be brief\", or invokes /caveman. Also auto-triggers when token efficiency is requested.\n---\n\nRespond terse like smart caveman. All technical substance stay. Only fluff die.\n\n## Persistence\n\nACTIVE EVERY RESPONSE. No revert after many turns. No filler drift. Still active if unsure. Off only: \"stop caveman\" / \"normal mode\".\n\nDefault: **full**. Switch: `/caveman lite|full|ultra`.\n\n## Rules\n\nDrop: articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), hedging. Fragments OK. Short synonyms (big not extensive, fix not \"implement a solution for\"). Technical terms exact. Code blocks unchanged. Errors quoted exact.\n\nPattern: `[thing] [action] [reason]. [next step].`\n\nNot: \"Sure! I'd be happy to help you with that. The issue you're experiencing is likely caused by...\"\nYes: \"Bug in auth middleware. Token expiry check use `<` not `<=`. Fix:\"\n\n## Intensity\n\n| Level | What change |\n|-------|------------|\n| **lite** | No filler/hedging. Keep articles + full sentences. Professional but tight |\n| **full** | Drop articles, fragments OK, short synonyms. Classic caveman |\n| **ultra** | Abbreviate prose words (DB/auth/config/req/res/fn/impl), strip conjunctions, arrows for causality (X \u2192 Y), one word when one word enough. Code symbols, function names, API names, error strings: never abbreviate |\n| **wenyan-lite** | Semi-classical. Drop filler/hedging but keep grammar structure, classical register |\n| **wenyan-full** | Maximum classical terseness. Fully \u6587\u8a00\u6587. 80-90% character reduction. Classical sentence patterns, verbs precede objects, subjects often omitted, classical particles (\u4e4b/\u4e43/\u70ba/\u5176) |\n| **wenyan-ultra** | Extreme abbreviation while keeping classical Chinese feel. Maximum compression, ultra terse |\n\nExample \u2014 \"Why React component re-render?\"\n- lite: \"Your component re-renders because you create a new object reference each render. Wrap it in `useMemo`.\""}, {"name": "caveman-compress", "desc": "---", "content": "---\nname: caveman-compress\ndescription: >\n  Compress natural language memory files (CLAUDE.md, todos, preferences) into caveman format\n  to save input tokens. Preserves all technical substance, code, URLs, and structure.\n  Compressed version overwrites the original file. Human-readable backup saved as FILE.original.md.\n  Trigger: /caveman:compress FILEPATH or \"compress memory file\"\n---\n\n# Caveman Compress\n\n## Purpose\n\nCompress natural language files (CLAUDE.md, todos, preferences) into caveman-speak to reduce input tokens. Compressed version overwrites original. Human-readable backup saved as `<filename>.original.md`.\n\n## Trigger\n\n`/caveman:compress <filepath>` or when user asks to compress a memory file.\n\n## Process\n\n1. The compression scripts live in `caveman-compress/scripts/` (adjacent to this SKILL.md). If the path is not immediately available, search for `caveman-compress/scripts/__main__.py`.\n\n2. Run:\n\ncd caveman-compress && python3 -m scripts <absolute_filepath>\n\n3. The CLI will:\n- detect file type (no tokens)\n- call Claude to compress\n- validate output (no tokens)\n- if errors: cherry-pick fix with Claude (targeted fixes only, no recompression)\n- retry up to 2 times\n- if still failing after 2 retries: report error to user, leave original file untouched\n\n4. Return result to user\n\n## Compression Rules\n\n### Remove"}, {"name": "cavecrew", "desc": "---", "content": "---\nname: cavecrew\ndescription: >\n  Decision guide for delegating to caveman-style subagents. Tells the main\n  thread WHEN to spawn `cavecrew-investigator` (locate code), `cavecrew-builder`\n  (1-2 file edit), or `cavecrew-reviewer` (diff review) instead of doing the\n  work inline or using vanilla `Explore`. Subagent output is caveman-compressed\n  so the tool-result injected back into main context is ~60% smaller \u2014 main\n  context lasts longer across long sessions.\n  Trigger: \"delegate to subagent\", \"use cavecrew\", \"spawn investigator/builder/reviewer\",\n  \"save context\", \"compressed agent output\".\n---\n\nCavecrew = three subagent presets that emit caveman output. Same job as Anthropic defaults (`Explore`, edit-style agents, reviewer); difference is the tool-result they return is compressed, so main context shrinks per delegation.\n\n## When to use cavecrew vs alternatives\n\n| Task | Use |\n|---|---|\n| \"Where is X defined / what calls Y / list uses of Z\" | `cavecrew-investigator` |\n| Same but you also want suggestions/architecture commentary | `Explore` (vanilla) |\n| Surgical edit, \u22642 files, scope obvious | `cavecrew-builder` |\n| New feature / 3+ files / cross-cutting refactor | Main thread or `feature-dev:code-architect` |\n| Review diff, branch, or file for bugs | `cavecrew-reviewer` |\n| Deep code review with rationale + alternatives | `Code Reviewer` (vanilla) |\n| One-line answer you already know | Main thread, no subagent |\n\nRule of thumb: **if you'd want the subagent's output in 1/3 the tokens, pick cavecrew. If you'd want prose, pick vanilla.**\n\n## Why this exists (the real win)\n\nSubagent tool results get injected into main context verbatim. A vanilla `Explore` that returns 2k tokens of prose costs 2k tokens of main-context budget every time. The same finding from `cavecrew-investigator` returns ~700 tokens. Across 20 delegations in one session that's the difference between context exhaustion and finishing the task.\n\n## Output contracts\n\nWhat main thread can rely on per agent:\n\n**`cavecrew-investigator`**\n```\n<Header>:"}, {"name": "caveman-stats", "desc": "---", "content": "---\nname: caveman-stats\ndescription: >\n  Show real token usage and estimated savings for the current session.\n  Reads directly from the Claude Code session log \u2014 no AI estimation.\n  Triggers on /caveman-stats. Output is injected by the mode-tracker hook;\n  the model itself does not compute the numbers.\n---\n\nThis skill is delivered by `hooks/caveman-stats.js` (read by `hooks/caveman-mode-tracker.js` on `/caveman-stats`). The model does not need to do anything when this skill fires \u2014 the hook returns `decision: \"block\"` with the formatted stats as the reason. The user sees the numbers immediately."}, {"name": "compress", "desc": "---", "content": "---\nname: compress\ndescription: >\n  Compress natural language memory files (CLAUDE.md, todos, preferences) into caveman format\n  to save input tokens. Preserves all technical substance, code, URLs, and structure.\n  Compressed version overwrites the original file. Human-readable backup saved as FILE.original.md.\n  Trigger: /caveman:compress FILEPATH or \"compress memory file\"\n---\n\n# Caveman Compress\n\n## Purpose\n\nCompress natural language files (CLAUDE.md, todos, preferences) into caveman-speak to reduce input tokens. Compressed version overwrites original. Human-readable backup saved as `<filename>.original.md`.\n\n## Trigger\n\n`/caveman:compress <filepath>` or when user asks to compress a memory file.\n\n## Process\n\n1. This SKILL.md lives alongside `scripts/` in the same directory. Find that directory.\n\n2. Run:\n\ncd <directory_containing_this_SKILL.md> && python3 -m scripts <absolute_filepath>\n\n3. The CLI will:\n- detect file type (no tokens)\n- call Claude to compress\n- validate output (no tokens)\n- if errors: cherry-pick fix with Claude (targeted fixes only, no recompression)\n- retry up to 2 times\n- if still failing after 2 retries: report error to user, leave original file untouched\n\n4. Return result to user\n\n## Compression Rules\n\n### Remove"}, {"name": "caveman-commit", "desc": "---", "content": "---\nname: caveman-commit\ndescription: >\n  Ultra-compressed commit message generator. Cuts noise from commit messages while preserving\n  intent and reasoning. Conventional Commits format. Subject \u226450 chars, body only when \"why\"\n  isn't obvious. Use when user says \"write a commit\", \"commit message\", \"generate commit\",\n  \"/commit\", or invokes /caveman-commit. Auto-triggers when staging changes.\n---\n\nWrite commit messages terse and exact. Conventional Commits format. No fluff. Why over what.\n\n## Rules\n\n**Subject line:**\n- `<type>(<scope>): <imperative summary>` \u2014 `<scope>` optional\n- Types: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `chore`, `build`, `ci`, `style`, `revert`\n- Imperative mood: \"add\", \"fix\", \"remove\" \u2014 not \"added\", \"adds\", \"adding\"\n- \u226450 chars when possible, hard cap 72\n- No trailing period\n- Match project convention for capitalization after the colon\n\n**Body (only if needed):**\n- Skip entirely when subject is self-explanatory\n- Add body only for: non-obvious *why*, breaking changes, migration notes, linked issues\n- Wrap at 72 chars\n- Bullets `-` not `*`\n- Reference issues/PRs at end: `Closes #42`, `Refs #17`\n\n**What NEVER goes in:**\n- \"This commit does X\", \"I\", \"we\", \"now\", \"currently\" \u2014 the diff says what\n- \"As requested by...\" \u2014 use Co-authored-by trailer\n- \"Generated with Claude Code\" or any AI attribution\n- Emoji (unless project convention requires)\n- Restating the file name when scope already says it\n\n## Examples\n\nDiff: new endpoint for user profile with body explaining the why\n- \u274c \"feat: add a new endpoint to get user profile information from the database\"\n- \u2705"}, {"name": "caveman-help", "desc": "---", "content": "---\nname: caveman-help\ndescription: >\n  Quick-reference card for all caveman modes, skills, and commands.\n  One-shot display, not a persistent mode. Trigger: /caveman-help,\n  \"caveman help\", \"what caveman commands\", \"how do I use caveman\".\n---\n\n# Caveman Help\n\nDisplay this reference card when invoked. One-shot \u2014 do NOT change mode, write flag files, or persist anything. Output in caveman style.\n\n## Modes\n\n| Mode | Trigger | What change |\n|------|---------|-------------|\n| **Lite** | `/caveman lite` | Drop filler. Keep sentence structure. |\n| **Full** | `/caveman` | Drop articles, filler, pleasantries, hedging. Fragments OK. Default. |\n| **Ultra** | `/caveman ultra` | Extreme compression. Bare fragments. Tables over prose. |\n| **Wenyan-Lite** | `/caveman wenyan-lite` | Classical Chinese style, light compression. |\n| **Wenyan-Full** | `/caveman wenyan` | Full \u6587\u8a00\u6587. Maximum classical terseness. |\n| **Wenyan-Ultra** | `/caveman wenyan-ultra` | Extreme. Ancient scholar on a budget. |\n\nMode stick until changed or session end.\n\n## Skills\n\n| Skill | Trigger | What it do |\n|-------|---------|-----------|\n| **caveman-commit** | `/caveman-commit` | Terse commit messages. Conventional Commits. \u226450 char subject. |\n| **caveman-review** | `/caveman-review` | One-line PR comments: `L42: bug: user null. Add guard.` |\n| **caveman-compress** | `/caveman:compress <file>` | Compress .md files to caveman prose. Saves ~46% input tokens. |\n| **caveman-help** | `/caveman-help` | This card. |\n\n## Deactivate\n\nSay \"stop caveman\" or \"normal mode\". Resume anytime with `/caveman`.\n\n## Configure Default Mode\n"}, {"name": "caveman-review", "desc": "---", "content": "---\nname: caveman-review\ndescription: >\n  Ultra-compressed code review comments. Cuts noise from PR feedback while preserving\n  the actionable signal. Each comment is one line: location, problem, fix. Use when user\n  says \"review this PR\", \"code review\", \"review the diff\", \"/review\", or invokes\n  /caveman-review. Auto-triggers when reviewing pull requests.\n---\n\nWrite code review comments terse and actionable. One line per finding. Location, problem, fix. No throat-clearing.\n\n## Rules\n\n**Format:** `L<line>: <problem>. <fix>.` \u2014 or `<file>:L<line>: ...` when reviewing multi-file diffs.\n\n**Severity prefix (optional, when mixed):**\n- `\ud83d\udd34 bug:` \u2014 broken behavior, will cause incident\n- `\ud83d\udfe1 risk:` \u2014 works but fragile (race, missing null check, swallowed error)\n- `\ud83d\udd35 nit:` \u2014 style, naming, micro-optim. Author can ignore\n- `\u2753 q:` \u2014 genuine question, not a suggestion\n\n**Drop:**\n- \"I noticed that...\", \"It seems like...\", \"You might want to consider...\"\n- \"This is just a suggestion but...\" \u2014 use `nit:` instead\n- \"Great work!\", \"Looks good overall but...\" \u2014 say it once at the top, not per comment\n- Restating what the line does \u2014 the reviewer can read the diff\n- Hedging (\"perhaps\", \"maybe\", \"I think\") \u2014 if unsure use `q:`\n\n**Keep:**\n- Exact line numbers\n- Exact symbol/function/variable names in backticks\n- Concrete fix, not \"consider refactoring this\"\n- The *why* if the fix isn't obvious from the problem statement\n\n## Examples\n\n\u274c \"I noticed that on line 42 you're not checking if the user object is null before accessing the email property. This could potentially cause a crash if the user is not found in the database. You might want to add a null check here.\"\n\n\u2705 `L42: \ud83d\udd34 bug: user can be null after .find(). Add guard before .email.`\n"}, {"name": "brainstorming", "desc": "---", "content": "---\nname: brainstorming\ndescription: \"You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.\"\n---\n\n# Brainstorming Ideas Into Designs\n\nHelp turn ideas into fully formed designs and specs through natural collaborative dialogue.\n\nStart by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.\n\n<HARD-GATE>\nDo NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.\n</HARD-GATE>\n\n## Anti-Pattern: \"This Is Too Simple To Need A Design\"\n\nEvery project goes through this process. A todo list, a single-function utility, a config change \u2014 all of them. \"Simple\" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.\n\n## Checklist\n\nYou MUST create a task for each of these items and complete them in order:\n\n1. **Explore project context** \u2014 check files, docs, recent commits\n2. **Offer visual companion** (if topic will involve visual questions) \u2014 this is its own message, not combined with a clarifying question. See the Visual Companion section below.\n3. **Ask clarifying questions** \u2014 one at a time, understand purpose/constraints/success criteria\n4. **Propose 2-3 approaches** \u2014 with trade-offs and your recommendation\n5. **Present design** \u2014 in sections scaled to their complexity, get user approval after each section\n6. **Write design doc** \u2014 save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit\n7. **Spec self-review** \u2014 quick inline check for placeholders, contradictions, ambiguity, scope (see below)\n8. **User reviews written spec** \u2014 ask user to review the spec file before proceeding\n9. **Transition to implementation** \u2014 invoke writing-plans skill to create implementation plan\n\n## Process Flow\n\n```dot\ndigraph brainstorming {\n    \"Explore project context\" [shape=box];\n    \"Visual questions ahead?\" [shape=diamond];\n    \"Offer Visual Companion\\n(own message, no other content)\" [shape=box];"}, {"name": "dispatching-parallel-agents", "desc": "---", "content": "---\nname: dispatching-parallel-agents\ndescription: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies\n---\n\n# Dispatching Parallel Agents\n\n## Overview\n\nYou delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history \u2014 you construct exactly what they need. This also preserves your own context for coordination work.\n\nWhen you have multiple unrelated failures (different test files, different subsystems, different bugs), investigating them sequentially wastes time. Each investigation is independent and can happen in parallel.\n\n**Core principle:** Dispatch one agent per independent problem domain. Let them work concurrently.\n\n## When to Use\n\n```dot\ndigraph when_to_use {\n    \"Multiple failures?\" [shape=diamond];\n    \"Are they independent?\" [shape=diamond];\n    \"Single agent investigates all\" [shape=box];\n    \"One agent per problem domain\" [shape=box];\n    \"Can they work in parallel?\" [shape=diamond];\n    \"Sequential agents\" [shape=box];\n    \"Parallel dispatch\" [shape=box];\n\n    \"Multiple failures?\" -> \"Are they independent?\" [label=\"yes\"];\n    \"Are they independent?\" -> \"Single agent investigates all\" [label=\"no - related\"];\n    \"Are they independent?\" -> \"Can they work in parallel?\" [label=\"yes\"];\n    \"Can they work in parallel?\" -> \"Parallel dispatch\" [label=\"yes\"];\n    \"Can they work in parallel?\" -> \"Sequential agents\" [label=\"no - shared state\"];\n}\n```\n\n**Use when:**\n- 3+ test files failing with different root causes\n- Multiple subsystems broken independently\n- Each problem can be understood without context from others\n- No shared state between investigations"}, {"name": "executing-plans", "desc": "---", "content": "---\nname: executing-plans\ndescription: Use when you have a written implementation plan to execute in a separate session with review checkpoints\n---\n\n# Executing Plans\n\n## Overview\n\nLoad plan, review critically, execute all tasks, report when complete.\n\n**Announce at start:** \"I'm using the executing-plans skill to implement this plan.\"\n\n**Note:** Tell your human partner that Superpowers works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use superpowers:subagent-driven-development instead of this skill.\n\n## The Process\n\n### Step 1: Load and Review Plan\n1. Read plan file\n2. Review critically - identify any questions or concerns about the plan\n3. If concerns: Raise them with your human partner before starting\n4. If no concerns: Create TodoWrite and proceed\n\n### Step 2: Execute Tasks\n\nFor each task:\n1. Mark as in_progress\n2. Follow each step exactly (plan has bite-sized steps)\n3. Run verifications as specified\n4. Mark as completed\n\n### Step 3: Complete Development\n\nAfter all tasks complete and verified:\n- Announce: \"I'm using the finishing-a-development-branch skill to complete this work.\"\n- **REQUIRED SUB-SKILL:** Use superpowers:finishing-a-development-branch\n- Follow that skill to verify tests, present options, execute choice\n\n## When to Stop and Ask for Help\n"}, {"name": "finishing-a-development-branch", "desc": "---", "content": "---\nname: finishing-a-development-branch\ndescription: Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup\n---\n\n# Finishing a Development Branch\n\n## Overview\n\nGuide completion of development work by presenting clear options and handling chosen workflow.\n\n**Core principle:** Verify tests \u2192 Present options \u2192 Execute choice \u2192 Clean up.\n\n**Announce at start:** \"I'm using the finishing-a-development-branch skill to complete this work.\"\n\n## The Process\n\n### Step 1: Verify Tests\n\n**Before presenting options, verify tests pass:**\n\n```bash\n# Run project's test suite\nnpm test / cargo test / pytest / go test ./...\n```\n\n**If tests fail:**\n```\nTests failing (<N> failures). Must fix before completing:\n\n[Show failures]\n\nCannot proceed with merge/PR until tests pass.\n```\n\nStop. Don't proceed to Step 2.\n\n**If tests pass:** Continue to Step 2.\n\n### Step 2: Determine Base Branch"}, {"name": "receiving-code-review", "desc": "---", "content": "---\nname: receiving-code-review\ndescription: Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation\n---\n\n# Code Review Reception\n\n## Overview\n\nCode review requires technical evaluation, not emotional performance.\n\n**Core principle:** Verify before implementing. Ask before assuming. Technical correctness over social comfort.\n\n## The Response Pattern\n\n```\nWHEN receiving code review feedback:\n\n1. READ: Complete feedback without reacting\n2. UNDERSTAND: Restate requirement in own words (or ask)\n3. VERIFY: Check against codebase reality\n4. EVALUATE: Technically sound for THIS codebase?\n5. RESPOND: Technical acknowledgment or reasoned pushback\n6. IMPLEMENT: One item at a time, test each\n```\n\n## Forbidden Responses\n\n**NEVER:**\n- \"You're absolutely right!\" (explicit CLAUDE.md violation)\n- \"Great point!\" / \"Excellent feedback!\" (performative)\n- \"Let me implement that now\" (before verification)\n\n**INSTEAD:**\n- Restate the technical requirement\n- Ask clarifying questions\n- Push back with technical reasoning if wrong\n- Just start working (actions > words)\n\n## Handling Unclear Feedback"}, {"name": "requesting-code-review", "desc": "---", "content": "---\nname: requesting-code-review\ndescription: Use when completing tasks, implementing major features, or before merging to verify work meets requirements\n---\n\n# Requesting Code Review\n\nDispatch superpowers:code-reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation \u2014 never your session's history. This keeps the reviewer focused on the work product, not your thought process, and preserves your own context for continued work.\n\n**Core principle:** Review early, review often.\n\n## When to Request Review\n\n**Mandatory:**\n- After each task in subagent-driven development\n- After completing major feature\n- Before merge to main\n\n**Optional but valuable:**\n- When stuck (fresh perspective)\n- Before refactoring (baseline check)\n- After fixing complex bug\n\n## How to Request\n\n**1. Get git SHAs:**\n```bash\nBASE_SHA=$(git rev-parse HEAD~1)  # or origin/main\nHEAD_SHA=$(git rev-parse HEAD)\n```\n\n**2. Dispatch code-reviewer subagent:**\n\nUse Task tool with superpowers:code-reviewer type, fill template at `code-reviewer.md`\n\n**Placeholders:**\n- `{WHAT_WAS_IMPLEMENTED}` - What you just built\n- `{PLAN_OR_REQUIREMENTS}` - What it should do\n- `{BASE_SHA}` - Starting commit\n- `{HEAD_SHA}` - Ending commit"}, {"name": "subagent-driven-development", "desc": "---", "content": "---\nname: subagent-driven-development\ndescription: Use when executing implementation plans with independent tasks in the current session\n---\n\n# Subagent-Driven Development\n\nExecute plan by dispatching fresh subagent per task, with two-stage review after each: spec compliance review first, then code quality review.\n\n**Why subagents:** You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history \u2014 you construct exactly what they need. This also preserves your own context for coordination work.\n\n**Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration\n\n## When to Use\n\n```dot\ndigraph when_to_use {\n    \"Have implementation plan?\" [shape=diamond];\n    \"Tasks mostly independent?\" [shape=diamond];\n    \"Stay in this session?\" [shape=diamond];\n    \"subagent-driven-development\" [shape=box];\n    \"executing-plans\" [shape=box];\n    \"Manual execution or brainstorm first\" [shape=box];\n\n    \"Have implementation plan?\" -> \"Tasks mostly independent?\" [label=\"yes\"];\n    \"Have implementation plan?\" -> \"Manual execution or brainstorm first\" [label=\"no\"];\n    \"Tasks mostly independent?\" -> \"Stay in this session?\" [label=\"yes\"];\n    \"Tasks mostly independent?\" -> \"Manual execution or brainstorm first\" [label=\"no - tightly coupled\"];\n    \"Stay in this session?\" -> \"subagent-driven-development\" [label=\"yes\"];\n    \"Stay in this session?\" -> \"executing-plans\" [label=\"no - parallel session\"];\n}\n```\n\n**vs. Executing Plans (parallel session):**\n- Same session (no context switch)\n- Fresh subagent per task (no context pollution)\n- Two-stage review after each task: spec compliance first, then code quality\n- Faster iteration (no human-in-loop between tasks)\n\n## The Process"}, {"name": "systematic-debugging", "desc": "---", "content": "---\nname: systematic-debugging\ndescription: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes\n---\n\n# Systematic Debugging\n\n## Overview\n\nRandom fixes waste time and create new bugs. Quick patches mask underlying issues.\n\n**Core principle:** ALWAYS find root cause before attempting fixes. Symptom fixes are failure.\n\n**Violating the letter of this process is violating the spirit of debugging.**\n\n## The Iron Law\n\n```\nNO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST\n```\n\nIf you haven't completed Phase 1, you cannot propose fixes.\n\n## When to Use\n\nUse for ANY technical issue:\n- Test failures\n- Bugs in production\n- Unexpected behavior\n- Performance problems\n- Build failures\n- Integration issues\n\n**Use this ESPECIALLY when:**\n- Under time pressure (emergencies make guessing tempting)\n- \"Just one quick fix\" seems obvious\n- You've already tried multiple fixes\n- Previous fix didn't work\n- You don't fully understand the issue\n"}, {"name": "test-driven-development", "desc": "---", "content": "---\nname: test-driven-development\ndescription: Use when implementing any feature or bugfix, before writing implementation code\n---\n\n# Test-Driven Development (TDD)\n\n## Overview\n\nWrite the test first. Watch it fail. Write minimal code to pass.\n\n**Core principle:** If you didn't watch the test fail, you don't know if it tests the right thing.\n\n**Violating the letter of the rules is violating the spirit of the rules.**\n\n## When to Use\n\n**Always:**\n- New features\n- Bug fixes\n- Refactoring\n- Behavior changes\n\n**Exceptions (ask your human partner):**\n- Throwaway prototypes\n- Generated code\n- Configuration files\n\nThinking \"skip TDD just this once\"? Stop. That's rationalization.\n\n## The Iron Law\n\n```\nNO PRODUCTION CODE WITHOUT A FAILING TEST FIRST\n```\n\nWrite code before the test? Delete it. Start over.\n\n**No exceptions:**\n- Don't keep it as \"reference\""}, {"name": "using-git-worktrees", "desc": "---", "content": "---\nname: using-git-worktrees\ndescription: Use when starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart directory selection and safety verification\n---\n\n# Using Git Worktrees\n\n## Overview\n\nGit worktrees create isolated workspaces sharing the same repository, allowing work on multiple branches simultaneously without switching.\n\n**Core principle:** Systematic directory selection + safety verification = reliable isolation.\n\n**Announce at start:** \"I'm using the using-git-worktrees skill to set up an isolated workspace.\"\n\n## Directory Selection Process\n\nFollow this priority order:\n\n### 1. Check Existing Directories\n\n```bash\n# Check in priority order\nls -d .worktrees 2>/dev/null     # Preferred (hidden)\nls -d worktrees 2>/dev/null      # Alternative\n```\n\n**If found:** Use that directory. If both exist, `.worktrees` wins.\n\n### 2. Check CLAUDE.md\n\n```bash\ngrep -i \"worktree.*director\" CLAUDE.md 2>/dev/null\n```\n\n**If preference specified:** Use it without asking.\n\n### 3. Ask User\n\nIf no directory exists and no CLAUDE.md preference:"}, {"name": "using-superpowers", "desc": "---", "content": "---\nname: using-superpowers\ndescription: Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions\n---\n\n<SUBAGENT-STOP>\nIf you were dispatched as a subagent to execute a specific task, skip this skill.\n</SUBAGENT-STOP>\n\n<EXTREMELY-IMPORTANT>\nIf you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.\n\nIF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.\n\nThis is not negotiable. This is not optional. You cannot rationalize your way out of this.\n</EXTREMELY-IMPORTANT>\n\n## Instruction Priority\n\nSuperpowers skills override default system prompt behavior, but **user instructions always take precedence**:\n\n1. **User's explicit instructions** (CLAUDE.md, GEMINI.md, AGENTS.md, direct requests) \u2014 highest priority\n2. **Superpowers skills** \u2014 override default system behavior where they conflict\n3. **Default system prompt** \u2014 lowest priority\n\nIf CLAUDE.md, GEMINI.md, or AGENTS.md says \"don't use TDD\" and a skill says \"always use TDD,\" follow the user's instructions. The user is in control.\n\n## How to Access Skills\n\n**In Claude Code:** Use the `Skill` tool. When you invoke a skill, its content is loaded and presented to you\u2014follow it directly. Never use the Read tool on skill files.\n\n**In Copilot CLI:** Use the `skill` tool. Skills are auto-discovered from installed plugins. The `skill` tool works the same as Claude Code's `Skill` tool.\n\n**In Gemini CLI:** Skills activate via the `activate_skill` tool. Gemini loads skill metadata at session start and activates the full content on demand.\n\n**In other environments:** Check your platform's documentation for how skills are loaded.\n\n## Platform Adaptation\n\nSkills use Claude Code tool names. Non-CC platforms: see `references/copilot-tools.md` (Copilot CLI), `references/codex-tools.md` (Codex) for tool equivalents. Gemini CLI users get the tool mapping loaded automatically via GEMINI.md."}, {"name": "verification-before-completion", "desc": "---", "content": "---\nname: verification-before-completion\ndescription: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always\n---\n\n# Verification Before Completion\n\n## Overview\n\nClaiming work is complete without verification is dishonesty, not efficiency.\n\n**Core principle:** Evidence before claims, always.\n\n**Violating the letter of this rule is violating the spirit of this rule.**\n\n## The Iron Law\n\n```\nNO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE\n```\n\nIf you haven't run the verification command in this message, you cannot claim it passes.\n\n## The Gate Function\n\n```\nBEFORE claiming any status or expressing satisfaction:\n\n1. IDENTIFY: What command proves this claim?\n2. RUN: Execute the FULL command (fresh, complete)\n3. READ: Full output, check exit code, count failures\n4. VERIFY: Does output confirm the claim?\n   - If NO: State actual status with evidence\n   - If YES: State claim WITH evidence\n5. ONLY THEN: Make the claim\n\nSkip any step = lying, not verifying\n```\n\n## Common Failures"}, {"name": "writing-plans", "desc": "---", "content": "---\nname: writing-plans\ndescription: Use when you have a spec or requirements for a multi-step task, before touching code\n---\n\n# Writing Plans\n\n## Overview\n\nWrite comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.\n\nAssume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.\n\n**Announce at start:** \"I'm using the writing-plans skill to create the implementation plan.\"\n\n**Context:** This should be run in a dedicated worktree (created by brainstorming skill).\n\n**Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`\n- (User preferences for plan location override this default)\n\n## Scope Check\n\nIf the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans \u2014 one per subsystem. Each plan should produce working, testable software on its own.\n\n## File Structure\n\nBefore defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.\n\n- Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.\n- You reason best about code you can hold in context at once, and your edits are more reliable when files are focused. Prefer smaller, focused files over large ones that do too much.\n- Files that change together should live together. Split by responsibility, not by technical layer.\n- In existing codebases, follow established patterns. If the codebase uses large files, don't unilaterally restructure - but if a file you're modifying has grown unwieldy, including a split in the plan is reasonable.\n\nThis structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.\n\n## Bite-Sized Task Granularity\n\n**Each step is one action (2-5 minutes):**\n- \"Write the failing test\" - step\n- \"Run it to make sure it fails\" - step"}, {"name": "writing-skills", "desc": "---", "content": "---\nname: writing-skills\ndescription: Use when creating new skills, editing existing skills, or verifying skills work before deployment\n---\n\n# Writing Skills\n\n## Overview\n\n**Writing skills IS Test-Driven Development applied to process documentation.**\n\n**Personal skills live in agent-specific directories (`~/.claude/skills` for Claude Code, `~/.agents/skills/` for Codex)** \n\nYou write test cases (pressure scenarios with subagents), watch them fail (baseline behavior), write the skill (documentation), watch tests pass (agents comply), and refactor (close loopholes).\n\n**Core principle:** If you didn't watch an agent fail without the skill, you don't know if the skill teaches the right thing.\n\n**REQUIRED BACKGROUND:** You MUST understand superpowers:test-driven-development before using this skill. That skill defines the fundamental RED-GREEN-REFACTOR cycle. This skill adapts TDD to documentation.\n\n**Official guidance:** For Anthropic's official skill authoring best practices, see anthropic-best-practices.md. This document provides additional patterns and guidelines that complement the TDD-focused approach in this skill.\n\n## What is a Skill?\n\nA **skill** is a reference guide for proven techniques, patterns, or tools. Skills help future Claude instances find and apply effective approaches.\n\n**Skills are:** Reusable techniques, patterns, tools, reference guides\n\n**Skills are NOT:** Narratives about how you solved a problem once\n\n## TDD Mapping for Skills\n\n| TDD Concept | Skill Creation |\n|-------------|----------------|\n| **Test case** | Pressure scenario with subagent |\n| **Production code** | Skill document (SKILL.md) |\n| **Test fails (RED)** | Agent violates rule without skill (baseline) |\n| **Test passes (GREEN)** | Agent complies with skill present |\n| **Refactor** | Close loopholes while maintaining compliance |\n| **Write test first** | Run baseline scenario BEFORE writing skill |\n| **Watch it fail** | Document exact rationalizations agent uses |"}];
 
 function openModal(icon, title, subtitle, bodyHtml) {
   document.getElementById('modal-icon').textContent = icon;

@@ -7,7 +7,7 @@ tags: [claude-os, tools]
 
 Auto-generated snapshot of my Claude Code setup.
 
-→ **[Open Dashboard](/dashboard.html)** — full split-pane view (MCPs, hooks, usage charts)
+→ **[Open Dashboard](/static/dashboard.html)** — full split-pane view (MCPs, hooks, usage charts)
 
 ---
 
@@ -15,6 +15,6 @@ Auto-generated snapshot of my Claude Code setup.
 |-----------|-------|
 | MCP Servers | 4 |
 | Hook commands | 2 |
-| Skills | 2 |
+| Skills | 24 |
 
-*Last snapshot: 2026-05-11 11:53*
+*Last snapshot: 2026-05-11 12:01*
