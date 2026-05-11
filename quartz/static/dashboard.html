@@ -651,11 +651,6 @@ body {
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
-.model-mini-title {
-  font-size: 9px; color: var(--text-dim);
-  text-transform: uppercase; letter-spacing: 0.5px;
-  margin-bottom: 6px;
-}
 .model-badges {
   display: flex; flex-wrap: wrap; gap: 6px;
   padding: 6px 0 0;
@@ -812,7 +807,7 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 14:50</span>
+  <span class="timestamp">Generated 2026-05-11 14:53</span>
   <button class="refresh-btn" onclick="resetLayout()" title="Reset panel sizes to default" style="margin-right:4px">⊞ Reset</button>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
@@ -961,11 +956,11 @@ body {
         <div class="stat-label">Input Tokens</div>
       </div>
       <div class="stat-card green">
-        <div class="stat-val">7214k</div>
+        <div class="stat-val">7215k</div>
         <div class="stat-label">Output Tokens</div>
       </div>
       <div class="stat-card accent">
-        <div class="stat-val">3011</div>
+        <div class="stat-val">3037</div>
         <div class="stat-label">Today</div>
       </div>
       <div class="stat-card teal">
@@ -1006,14 +1001,14 @@ body {
         <div class="insight-card">
           <div class="insight-icon">⚡</div>
           <div class="insight-body">
-            <div class="insight-val">3017</div>
+            <div class="insight-val">3019</div>
             <div class="insight-label">Avg events / active day</div>
           </div>
         </div>
         <div class="insight-card">
           <div class="insight-icon">💾</div>
           <div class="insight-body">
-            <div class="insight-val">1245794k</div>
+            <div class="insight-val">1246639k</div>
             <div class="insight-label">Cache tokens read (99% ROI)</div>
           </div>
         </div>
@@ -1033,14 +1028,16 @@ body {
   <!-- ─── Col 3: Hooks ─────────────────────────────────── -->
   <div class="panel" id="panel-hooks">
     <div class="panel-header">
+      <span class="panel-title">Models Used</span>
+    </div>
+    <div class="model-mini-wrap">
+      <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">18,851</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
+    </div>
+    <div class="panel-header" style="border-top:1px solid var(--border)">
       <span class="panel-title">Hooks</span>
       <span class="panel-count">4 active / 7</span>
       <div class="panel-spacer"></div>
       <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-hooks', this.value, '.hook-row')">
-    </div>
-    <div class="model-mini-wrap">
-      <div class="model-mini-title">Models Used</div>
-      <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">18,843</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
     </div>
     <div class="panel-scroll" style="padding:6px 14px">
       
@@ -1113,6 +1110,13 @@ body {
     </div>
     <div class="panel-scroll" style="padding:10px 14px">
       
+          <div class="prompt-row" data-filter-text="its under hooks and above hook elements it's bad push it above make hooks header and the models should be one below the  claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 14:52</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Its under hooks and above hook elements it's bad push it above make Hooks header and the models should be one below the </div>
+          </div>
           <div class="prompt-row" data-filter-text="i want models used in the right panel on top claude-professional">
             <div class="prompt-meta">
               <span class="prompt-time">05-11 14:50</span>
@@ -1248,15 +1252,6 @@ the place isn't enough</div>
             </div>
             <div class="prompt-text">top models is empty, worklog I don't think is taht useful to be in the middle</div>
           </div>
-          <div class="prompt-row" data-filter-text="https://narendra-babu-m.github.io/work-log/dashboard.html 404
-either this page is private or doesn't exist. claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 11:55</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">https://narendra-babu-m.github.io/work-log/dashboard.html 404
-Either this page is private or doesn't exist.</div>
-          </div>
     </div>
   </div>
 
@@ -1379,7 +1374,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3011],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3037],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -1394,7 +1389,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 3683, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 3709, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
