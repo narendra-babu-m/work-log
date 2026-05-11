@@ -5,23 +5,13 @@ tags: [home]
 
 # Narendra's Professional Work Log
 
-> Daily work, sprint progress, AI learnings, and Claude OS dashboard.
-
----
-
-## Current Sprint: Sprint YYYY-WW
-
-**Goal:** [One-line sprint goal]
-**Period:** YYYY-MM-DD → YYYY-MM-DD
-**Progress:** `░░░░░░░░░░░░░░░░░░░░` 0%
-
-→ [[sprints/sprint-template|View sprint details]]
+> Daily work, AI learnings, and Claude OS dashboard.
 
 ---
 
 ## Recent Activity
 
-- [[log/2026/05/11|May 11]] — 08 38, 11 33, 11 48, 11 53, 11 54, 11 55, 11 57, 12 02, 12 08, 12 15, 12 24, 12 28, 12 30, 12 31, 14 35, 14 39, 14 40
+- [[log/2026/05/11|May 11]] — 08 38, 11 33, 11 48, 11 53, 11 54, 11 55, 11 57, 12 02, 12 08, 12 15, 12 24, 12 28, 12 30, 12 31, 14 35, 14 39, 14 40, 14 49, 14 50, 14 53, 14 56, 15 00, 15 07, 15 11
 - [[log/2026/05/10|May 10]] — 00 39, 00 43, 08 38, 08 53, 08 55, 09 00, 09 04, 09 16, 09 18
 - [[log/2026/05/09|May 9]] — 08 30, 08 38, 08 43
 - [[log/2026/05/08|May 8]] — 13 20, 13 28, 13 49, 14 12, 14 13, 14 48, 15 00, 15 00 knowledge graph pipeline, 15 21, 15 32, 15 34, 15 43, 15 49, 15 58, 16 01, 17 12, 18 50, 19 50, 20 09, 20 19, 20 22
@@ -34,11 +24,10 @@ tags: [home]
 | Section | Description |
 |---------|-------------|
 | [[log/index\|Work Log]] | Daily & weekly work entries |
-| [[sprints/index\|Sprints]] | Sprint goals and progress |
 | [[learnings/index\|Learnings]] | AI and tech learnings |
 | [[org/index\|Org Context]] | Team context and people |
 | [[claude-os/index\|Claude OS]] | My Claude setup snapshot |
 
 ---
 
-*Last published: 2026-05-11 14:49*
+*Last published: 2026-05-11 15:18*

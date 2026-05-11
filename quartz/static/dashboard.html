@@ -253,7 +253,7 @@ body {
 /* Panels use flex sizing within their col-wrap.
    Default heights set here; JS overrides with per-column stored values. */
 /* Col 1 */
-#panel-sprint  { flex: 0 0 var(--c1r0, 120px); }
+#panel-models  { flex: 0 0 var(--c1r0, 120px); }
 #panel-mcps    { flex: 1 1 0; }         /* fills remaining */
 #panel-skills  { flex: 0 0 var(--c1r1, 200px); }
 
@@ -262,9 +262,9 @@ body {
 #panel-charts  { flex: 1 1 0; }
 
 /* Col 3 */
-#panel-hooks   { flex: 0 0 var(--c3r0, 160px); }
-#panel-prompts { flex: 1 1 0; }
-#panel-plugins { flex: 0 0 var(--c3r1, 180px); }
+#panel-plugins { flex: 0 0 var(--c3r0, 160px); }
+#panel-hooks   { flex: 1 1 0; }
+#panel-prompts { flex: 0 0 var(--c3r1, 180px); }
 
 /* ─── Stat Cards ─────────────────────────────────────── */
 .stat-grid {
@@ -327,28 +327,6 @@ body {
   background: rgba(74,222,128,0.12);
   color: var(--green);
   border: 1px solid rgba(74,222,128,0.25);
-}
-
-/* ─── Sprint Panel ───────────────────────────────────── */
-.sprint-goal {
-  font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text);
-}
-.sprint-meta {
-  font-size: 11px; color: var(--text-dim); margin-bottom: 10px;
-  font-family: var(--mono);
-}
-.progress-wrap {
-  height: 6px; background: var(--surface2); border-radius: 3px;
-  overflow: hidden; margin-bottom: 5px;
-}
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--purple));
-  border-radius: 3px;
-  transition: width 0.5s ease;
-}
-.progress-label {
-  font-size: 11px; color: var(--accent); font-family: var(--mono);
 }
 
 /* ─── Charts Panel ───────────────────────────────────── */
@@ -833,7 +811,7 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 15:10</span>
+  <span class="timestamp">Generated 2026-05-11 15:18</span>
   <button class="refresh-btn" onclick="resetLayout()" title="Reset panel sizes to default" style="margin-right:4px">⊞ Reset</button>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
@@ -843,20 +821,14 @@ body {
 
   <!-- ─── Col 1 ────────────────────────────────────────── -->
   <div class="col-wrap" id="col-1">
-    <!-- Sprint -->
-    <div class="panel" id="panel-sprint">
+    <!-- Models Used -->
+    <div class="panel" id="panel-models">
       <div class="collapsible-section">
         <div class="panel-header" data-collapsible>
-          <span class="panel-title">Current Sprint</span>
+          <span class="panel-title">Models Used</span>
         </div>
-        <div class="panel-scroll">
-          
-        <div class="sprint-goal">[One-line sprint goal]</div>
-        <div class="sprint-meta">YYYY-MM-DD → YYYY-MM-DD</div>
-        <div class="progress-wrap">
-          <div class="progress-bar" style="width:0%"></div>
-        </div>
-        <div class="progress-label">0% complete</div>
+        <div class="model-mini-wrap">
+          <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">19,047</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
         </div>
       </div>
     </div>
@@ -994,11 +966,11 @@ body {
           <div class="stat-label">Input Tokens</div>
         </div>
         <div class="stat-card green">
-          <div class="stat-val">7247k</div>
+          <div class="stat-val">7258k</div>
           <div class="stat-label">Output Tokens</div>
         </div>
         <div class="stat-card accent">
-          <div class="stat-val">3457</div>
+          <div class="stat-val">3634</div>
           <div class="stat-label">Today</div>
         </div>
         <div class="stat-card teal">
@@ -1039,14 +1011,14 @@ body {
           <div class="insight-card">
             <div class="insight-icon">⚡</div>
             <div class="insight-body">
-              <div class="insight-val">3040</div>
+              <div class="insight-val">3048</div>
               <div class="insight-label">Avg events / active day</div>
             </div>
           </div>
           <div class="insight-card">
             <div class="insight-icon">💾</div>
             <div class="insight-body">
-              <div class="insight-val">1264435k</div>
+              <div class="insight-val">1269565k</div>
               <div class="insight-label">Cache tokens read (99% ROI)</div>
             </div>
           </div>
@@ -1065,18 +1037,49 @@ body {
 
   <!-- ─── Col 3 ────────────────────────────────────────── -->
   <div class="col-wrap" id="col-3">
-    <!-- Hooks (includes Models Used at top) -->
+    <!-- Plugins -->
+    <div class="panel" id="panel-plugins">
+      <div class="collapsible-section">
+        <div class="panel-header" data-collapsible>
+          <span class="panel-title">Plugins</span>
+          <span class="panel-count">6</span>
+          <div class="panel-spacer"></div>
+          <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-plugins', this.value, '.plugin-card')">
+        </div>
+        <div class="panel-scroll" style="padding:8px 12px">
+          
+          <div class="plugin-card" data-filter-text="caveman global user" onclick="showPluginModal(0)">
+            <div class="plugin-name">caveman</div>
+            <span class="badge badge-event">user</span>
+          </div>
+          <div class="plugin-card" data-filter-text="plugin-dev 04-dm-pod2-mcp project" onclick="showPluginModal(1)">
+            <div class="plugin-name">plugin-dev</div>
+            <span class="badge badge-event">project</span>
+          </div>
+          <div class="plugin-card" data-filter-text="pyright-lsp global user" onclick="showPluginModal(2)">
+            <div class="plugin-name">pyright-lsp</div>
+            <span class="badge badge-event">user</span>
+          </div>
+          <div class="plugin-card" data-filter-text="superpowers mylimsqualitysamplewidge project" onclick="showPluginModal(3)">
+            <div class="plugin-name">superpowers</div>
+            <span class="badge badge-event">project</span>
+          </div>
+          <div class="plugin-card" data-filter-text="typescript-lsp 04-dm-pod2-mcp project" onclick="showPluginModal(4)">
+            <div class="plugin-name">typescript-lsp</div>
+            <span class="badge badge-event">project</span>
+          </div>
+          <div class="plugin-card" data-filter-text="warp global user" onclick="showPluginModal(5)">
+            <div class="plugin-name">warp</div>
+            <span class="badge badge-event">user</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="resize-handle row-handle" data-col="3" data-idx="0"></div>
+    <!-- Hooks -->
     <div class="panel" id="panel-hooks">
       <div class="collapsible-section">
         <div class="panel-header" data-collapsible>
-          <span class="panel-title">Models Used</span>
-        </div>
-        <div class="model-mini-wrap">
-          <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">18,988</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
-        </div>
-      </div>
-      <div class="collapsible-section">
-        <div class="panel-header" data-collapsible style="border-top:1px solid var(--border)">
           <span class="panel-title">Hooks</span>
           <span class="panel-count">4 active / 7</span>
           <div class="panel-spacer"></div>
@@ -1143,7 +1146,7 @@ body {
         </div>
       </div>
     </div>
-    <div class="resize-handle row-handle" data-col="3" data-idx="0"></div>
+    <div class="resize-handle row-handle" data-col="3" data-idx="1"></div>
     <!-- Recent Prompts -->
     <div class="panel" id="panel-prompts">
       <div class="collapsible-section">
@@ -1155,6 +1158,13 @@ body {
         </div>
         <div class="panel-scroll" style="padding:10px 14px">
           
+          <div class="prompt-row" data-filter-text="right panel, this is the hierarchy plugins, hooks, recent prompts, remove everything regarding sprints from left panel a claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 15:13</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Right Panel, this is the hierarchy Plugins, Hooks, Recent Prompts, remove everything regarding sprints from left panel a</div>
+          </div>
           <div class="prompt-row" data-filter-text="there is a bug only if i expand models used i can able to expands hooks and see its content claude-professional">
             <div class="prompt-meta">
               <span class="prompt-time">05-11 15:07</span>
@@ -1290,52 +1300,6 @@ the place isn't enough</div>
             </div>
             <div class="prompt-text">Skills isn't scrollable also can you make it much better so it can show more useful information to me, can it be categor</div>
           </div>
-          <div class="prompt-row" data-filter-text="also i think i don't need worklog are there more details which can be added to this dashboard, quick reference can be be claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 12:09</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Also I think I don't need worklog are there more details which can be added to this dashboard, quick reference can be be</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="resize-handle row-handle" data-col="3" data-idx="1"></div>
-    <!-- Plugins -->
-    <div class="panel" id="panel-plugins">
-      <div class="collapsible-section">
-        <div class="panel-header" data-collapsible>
-          <span class="panel-title">Plugins</span>
-          <span class="panel-count">6</span>
-          <div class="panel-spacer"></div>
-          <input class="panel-filter" type="text" placeholder="filter…" oninput="filterPanel('panel-plugins', this.value, '.plugin-card')">
-        </div>
-        <div class="panel-scroll" style="padding:8px 12px">
-          
-          <div class="plugin-card" data-filter-text="caveman global user" onclick="showPluginModal(0)">
-            <div class="plugin-name">caveman</div>
-            <span class="badge badge-event">user</span>
-          </div>
-          <div class="plugin-card" data-filter-text="plugin-dev 04-dm-pod2-mcp project" onclick="showPluginModal(1)">
-            <div class="plugin-name">plugin-dev</div>
-            <span class="badge badge-event">project</span>
-          </div>
-          <div class="plugin-card" data-filter-text="pyright-lsp global user" onclick="showPluginModal(2)">
-            <div class="plugin-name">pyright-lsp</div>
-            <span class="badge badge-event">user</span>
-          </div>
-          <div class="plugin-card" data-filter-text="superpowers mylimsqualitysamplewidge project" onclick="showPluginModal(3)">
-            <div class="plugin-name">superpowers</div>
-            <span class="badge badge-event">project</span>
-          </div>
-          <div class="plugin-card" data-filter-text="typescript-lsp 04-dm-pod2-mcp project" onclick="showPluginModal(4)">
-            <div class="plugin-name">typescript-lsp</div>
-            <span class="badge badge-event">project</span>
-          </div>
-          <div class="plugin-card" data-filter-text="warp global user" onclick="showPluginModal(5)">
-            <div class="plugin-name">warp</div>
-            <span class="badge badge-event">user</span>
-          </div>
         </div>
       </div>
     </div>
@@ -1421,7 +1385,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3457],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3634],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -1436,7 +1400,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 4129, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 4306, 2921, 1189, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
@@ -1642,9 +1606,9 @@ function showCsModal(idx) {
   // ── Apply per-column panel heights ─────────────────────────────────────────
   // For a col with N panels: panels 0..N-2 get fixed height, panel N-1 gets flex:1
   const COL_PANELS = {
-    '1': ['panel-sprint', 'panel-mcps', 'panel-skills'],
+    '1': ['panel-models', 'panel-mcps', 'panel-skills'],
     '2': ['panel-stats', 'panel-charts'],
-    '3': ['panel-hooks', 'panel-prompts', 'panel-plugins'],
+    '3': ['panel-plugins', 'panel-hooks', 'panel-prompts'],
   };
 
   function applyColRows(colId) {
