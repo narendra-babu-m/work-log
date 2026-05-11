@@ -14,7 +14,7 @@ Auto-generated snapshot of my Claude Code setup.
 | Component | Count |
 |-----------|-------|
 | MCP Servers | 4 |
-| Hook commands | 2 |
+| Hook commands | 3 |
 | Skills | 24 |
 
-*Last snapshot: 2026-05-11 14:34*
+*Last snapshot: 2026-05-11 14:49*
