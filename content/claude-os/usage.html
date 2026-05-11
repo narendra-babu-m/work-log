@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head><title>Claude Usage Stats</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  body { font-family: monospace; background: #161618; color: #d4d4d4; padding: 2rem; }
+  h2 { color: #7b97aa; }
+  .stats { display: flex; gap: 2rem; margin-bottom: 2rem; }
+  .stat { background: #2b2b2b; padding: 1rem 2rem; border-radius: 8px; }
+  .stat-val { font-size: 2rem; color: #84a59d; }
+  canvas { max-width: 100%; }
+</style>
+</head>
+<body>
+<h1>Claude Usage Stats</h1>
+<p>Generated: 2026-05-11 11:32</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-val">0</div><div>Sessions</div></div>
+  <div class="stat"><div class="stat-val">0</div><div>Input Tokens</div></div>
+  <div class="stat"><div class="stat-val">0</div><div>Output Tokens</div></div>
+</div>
+
+<h2>Activity — Last 30 Days</h2>
+<canvas id="activityChart" height="120"></canvas>
+
+<script>
+new Chart(document.getElementById('activityChart'), {
+  type: 'bar',
+  data: {
+    labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
+    datasets: [{
+      label: 'Events',
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 892],
+      backgroundColor: 'rgba(123, 151, 170, 0.7)',
+      borderColor: '#7b97aa',
+      borderWidth: 1,
+    }]
+  },
+  options: {
+    plugins: { legend: { labels: { color: '#d4d4d4' } } },
+    scales: {
+      x: { ticks: { color: '#646464', maxRotation: 45 } },
+      y: { ticks: { color: '#646464' }, beginAtZero: true }
+    }
+  }
+});
+</script>
+</body>
+</html>
