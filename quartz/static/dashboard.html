@@ -579,64 +579,98 @@ body {
 }
 
 /* ─── Responsive ─────────────────────────────────────── */
+
+/* ── Tablet: 600–900px ──────────────────────────────── */
 @media (max-width: 900px) {
-  body { overflow: hidden; }
+  html, body { height: auto; overflow: auto; }
+
   #header {
     position: relative;
     top: auto; left: auto; right: auto;
     height: auto; min-height: 48px;
-    flex-wrap: wrap;
-    gap: 8px; padding: 10px 14px;
+    flex-wrap: wrap; gap: 8px; padding: 10px 14px;
   }
   #header .subtitle, #header .timestamp { display: none; }
   #header #global-search { width: 100%; order: 10; }
-  #footer-cheatsheet { display: none; }
-  .resize-handle.col-handle { display: none; }
+  .resize-handle { display: none !important; }
 
-  /* Dashboard: 3 equal columns side by side */
+  /* Dashboard: 2-col grid, col-2 spans full height on left */
   #dashboard {
-    position: fixed;
-    top: auto; bottom: 0;
-    left: 0; right: 0;
-    height: calc(100dvh - 80px);
-    display: flex;
-    flex-direction: row;
-    overflow: hidden;
-    background: var(--border);
+    position: relative;
+    top: auto; left: auto; right: auto; bottom: auto;
+    height: auto; overflow: visible;
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    grid-template-rows: auto auto;
     gap: 1px;
-    grid-template-columns: unset;
+    background: var(--border);
   }
+  #col-1 { grid-column: 2; grid-row: 1; }
+  #col-2 { grid-column: 1; grid-row: 1 / 3; min-height: 100svh; }
+  #col-3 { grid-column: 2; grid-row: 2; }
 
-  /* Each column scrolls independently — override JS-set heights */
+  /* col-wraps: natural height, scroll inside */
   .col-wrap {
-    flex: 1 1 0 !important;
-    min-width: 0;
-    height: 100% !important;
+    height: auto !important;
     overflow-y: auto;
     overflow-x: hidden;
+    background: var(--bg);
   }
-  /* Panels inside: natural height, row handles hidden */
-  .panel {
-    flex: none !important;
-    height: auto !important;
-    min-height: unset !important;
-  }
-  .panel-scroll {
-    overflow: visible;
-    flex: none;
-    height: auto;
-    max-height: none;
-  }
-  .resize-handle.row-handle { display: none; }
+  .panel { flex: none !important; height: auto !important; min-height: unset !important; }
+  .panel-scroll { overflow: visible; flex: none; height: auto; max-height: none; }
 
-  /* Stats: 2 columns */
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  /* Stat/chart layout */
+  .stat-grid { grid-template-columns: repeat(3, 1fr); }
   .charts-row { grid-template-columns: 1fr; }
-  .insight-grid { grid-template-columns: 1fr; }
+  .insight-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Footer: inline below dashboard, stacked sections */
+  #footer-cheatsheet {
+    position: relative; left: auto; right: auto; bottom: auto;
+    height: auto; min-height: unset;
+    border-top: 2px solid var(--border);
+  }
+  #footer-drag { display: none; }
+  #footer-toggle { display: none; }
+  #footer-cs-scroll {
+    flex-direction: column;
+    overflow: visible; height: auto;
+    background: var(--bg); gap: 0;
+  }
+  .cs-section {
+    min-width: 0; max-width: none; width: 100%;
+    border-bottom: 1px solid var(--border);
+  }
+  .cs-rows { overflow: visible; max-height: none; flex: none; }
 }
 
-@media (max-width: 500px) {
-  .col-wrap { min-width: 280px; }
+/* ── Mobile: <600px — single column stack ────────────── */
+@media (max-width: 600px) {
+  #dashboard {
+    display: flex !important;
+    flex-direction: column;
+    height: auto;
+  }
+  #col-1 { order: 2; grid-column: unset; grid-row: unset; }
+  #col-2 { order: 1; grid-column: unset; grid-row: unset; min-height: unset; }
+  #col-3 { order: 3; grid-column: unset; grid-row: unset; }
+  .col-wrap { width: 100%; }
+
+  /* Quick Reference: 2-per-row grid */
+  #footer-cs-scroll {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 0; background: var(--border);
+  }
+  .cs-section {
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .cs-section:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .insight-grid { grid-template-columns: 1fr; }
+  #header .refresh-btn { display: none; }
 }
 
 /* ─── Utilities ──────────────────────────────────────── */
@@ -811,7 +845,7 @@ body {
   <span class="subtitle">Professional Workspace Dashboard</span>
   <div class="spacer"></div>
   <input id="global-search" type="text" placeholder="Search everything…" oninput="globalSearch(this.value)">
-  <span class="timestamp">Generated 2026-05-11 17:04</span>
+  <span class="timestamp">Generated 2026-05-11 19:39</span>
   <button class="refresh-btn" onclick="resetLayout()" title="Reset panel sizes to default" style="margin-right:4px">⊞ Reset</button>
   <button class="refresh-btn" onclick="window.location.reload()">↺ Refresh</button>
 </div>
@@ -828,7 +862,7 @@ body {
           <span class="panel-title">Models Used</span>
         </div>
         <div class="model-mini-wrap">
-          <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">19,156</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,653</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
+          <div class="model-badges"><div class="model-badge" style="--mc:var(--teal)"><span class="model-badge-name">sonnet</span><span class="model-badge-count">19,341</span></div><div class="model-badge" style="--mc:var(--purple)"><span class="model-badge-name">haiku</span><span class="model-badge-count">1,738</span></div><div class="model-badge" style="--mc:var(--accent)"><span class="model-badge-name">opus</span><span class="model-badge-count">96</span></div><div class="model-badge" style="--mc:var(--text-dim)"><span class="model-badge-name"><synthetic></span><span class="model-badge-count">20</span></div></div>
         </div>
       </div>
     </div>
@@ -962,15 +996,15 @@ body {
           <div class="stat-label">Active Days (30d)</div>
         </div>
         <div class="stat-card teal">
-          <div class="stat-val">6839k</div>
+          <div class="stat-val">6931k</div>
           <div class="stat-label">Input Tokens</div>
         </div>
         <div class="stat-card green">
-          <div class="stat-val">7293k</div>
+          <div class="stat-val">7306k</div>
           <div class="stat-label">Output Tokens</div>
         </div>
         <div class="stat-card accent">
-          <div class="stat-val">3970</div>
+          <div class="stat-val">5916</div>
           <div class="stat-label">Today</div>
         </div>
         <div class="stat-card teal">
@@ -1011,14 +1045,14 @@ body {
           <div class="insight-card">
             <div class="insight-icon">⚡</div>
             <div class="insight-body">
-              <div class="insight-val">3065</div>
+              <div class="insight-val">3163</div>
               <div class="insight-label">Avg events / active day</div>
             </div>
           </div>
           <div class="insight-card">
             <div class="insight-icon">💾</div>
             <div class="insight-body">
-              <div class="insight-val">1278693k</div>
+              <div class="insight-val">1287709k</div>
               <div class="insight-label">Cache tokens read (99% ROI)</div>
             </div>
           </div>
@@ -1158,147 +1192,159 @@ body {
         </div>
         <div class="panel-scroll" style="padding:10px 14px">
           
+          <div class="prompt-row" data-filter-text="so have you found the solution now can you implement it? claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 19:36</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">So have you found the solution now can you implement it?</div>
+          </div>
+          <div class="prompt-row" data-filter-text="i don't want the dashboard to break again if you want to add new skills or plugins which would help you avoid errors sea claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 19:30</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">I don't want the dashboard to break again if you want to add new skills or plugins which would help you avoid errors sea</div>
+          </div>
+          <div class="prompt-row" data-filter-text="emojies are unnecessary make it look professional claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 18:16</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">emojies are unnecessary make it look professional</div>
+          </div>
+          <div class="prompt-row" data-filter-text="remove the word tl:dr claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 18:16</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">remove the word Tl:DR</div>
+          </div>
+          <div class="prompt-row" data-filter-text="make it look visually better with bold italics here and there claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 18:15</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">make it look visually better with bold italics here and there</div>
+          </div>
+          <div class="prompt-row" data-filter-text="give me a teams chat pastable output, table won't look good, also let it be a tl:dr claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 18:14</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Give me a teams chat pastable output, table won't look good, also let it be a tl:dr</div>
+          </div>
+          <div class="prompt-row" data-filter-text="give me the table in a better format cant copy paste it claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 18:09</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">give me the table in a better format cant copy paste it</div>
+          </div>
+          <div class="prompt-row" data-filter-text="and also look upon solutions that product team isn't having in its timeline to fix or even considered by it's crucial claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 18:08</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">and also look upon solutions that product team isn't having in its timeline to fix or even considered by it's crucial</div>
+          </div>
+          <div class="prompt-row" data-filter-text="make it short and give me a teams pastable output claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 18:07</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">make it short and give me a teams pastable output</div>
+          </div>
+          <div class="prompt-row" data-filter-text="give me a short description on the new ideas built using the html and actual dm knowledge in vault and in the internet g claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 18:06</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Give me a short description on the new ideas built using the html and actual DM knowledge in vault and in the internet g</div>
+          </div>
+          <div class="prompt-row" data-filter-text="just focus on idea 1, remove idea 2 and give me the same claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 18:04</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Just focus on idea 1, remove idea 2 and give me the same</div>
+          </div>
+          <div class="prompt-row" data-filter-text="any other ideas which you can bring for our ai hackathon, on building agents to perform action claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 18:01</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Any other ideas which you can bring for our AI hackathon, on building agents to perform action</div>
+          </div>
+          <div class="prompt-row" data-filter-text="/users/i576292/downloads/dmc-api-flow-graph.html 
+
+with the graph built using dmc apis, what more can we achieve how can claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 17:51</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">/Users/I576292/Downloads/DMC-API-Flow-Graph.html 
+
+With the graph built using DMC Apis, what more can we achieve how can</div>
+          </div>
+          <div class="prompt-row" data-filter-text="give me a teams chat pastable output claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 17:33</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Give me a teams chat pastable output</div>
+          </div>
+          <div class="prompt-row" data-filter-text="give me a consultant level idea in short which i can pass this idea to my team, with feasibility and manual steps and wh claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 17:32</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Give me a consultant level idea in short which I can pass this idea to my team, with feasibility and manual steps and Wh</div>
+          </div>
+          <div class="prompt-row" data-filter-text="manually if i have to do how do a person does this, you have idea about mdos , with mdos how it's done? claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 17:24</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">Manually if I have to do how do a person does this, you have idea about MDOs , with MDOs how it's done?</div>
+          </div>
+          <div class="prompt-row" data-filter-text="what is the benefit claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 17:23</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">what is the benefit</div>
+          </div>
+          <div class="prompt-row" data-filter-text="[pasted text #1 +10 lines]
+
+what can we do with joule agents / ai use cases with this dm use case claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 17:19</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">[Pasted text #1 +10 lines]
+
+What can we do with Joule Agents / AI use cases with this DM Use Case</div>
+          </div>
+          <div class="prompt-row" data-filter-text="[pasted text #1 +18 lines]
+
+
+i have these 2 ideas, perform a feasibility study based on the dmc knowledge we have in vau claude-professional">
+            <div class="prompt-meta">
+              <span class="prompt-time">05-11 17:12</span>
+              <span class="prompt-proj">claude-professional</span>
+            </div>
+            <div class="prompt-text">[Pasted text #1 +18 lines]
+
+
+I have these 2 ideas, perform a feasibility study based on the dmc knowledge we have in vau</div>
+          </div>
           <div class="prompt-row" data-filter-text="you have corrupted the entire dashboard, have you saved the previous version before we made this change? if yes that was claude-professional">
             <div class="prompt-meta">
               <span class="prompt-time">05-11 16:59</span>
               <span class="prompt-proj">claude-professional</span>
             </div>
             <div class="prompt-text">You have corrupted the entire dashboard, have you saved the previous version before we made this change? If yes that was</div>
-          </div>
-          <div class="prompt-row" data-filter-text="2 panel layout isn't working as expected claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 16:45</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">2 panel layout isn't working as expected</div>
-          </div>
-          <div class="prompt-row" data-filter-text="make the entire dashboard responsive, when you keep on reducing the width combine left and right panels, hierarchy middl claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 15:23</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Make the entire dashboard responsive, when you keep on reducing the width combine left and right panels, hierarchy middl</div>
-          </div>
-          <div class="prompt-row" data-filter-text="right panel, this is the hierarchy plugins, hooks, recent prompts, remove everything regarding sprints from left panel a claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 15:13</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Right Panel, this is the hierarchy Plugins, Hooks, Recent Prompts, remove everything regarding sprints from left panel a</div>
-          </div>
-          <div class="prompt-row" data-filter-text="there is a bug only if i expand models used i can able to expands hooks and see its content claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 15:07</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">There is a bug only if I expand models used I can able to expands hooks and see its content</div>
-          </div>
-          <div class="prompt-row" data-filter-text="skills and plugins are getting adjusted together, mcp activity recent prompts are getting adjusted together i want every claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 15:02</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Skills and plugins are getting adjusted together, mcp activity recent prompts are getting adjusted together I want every</div>
-          </div>
-          <div class="prompt-row" data-filter-text="i don't like this responsive view where if cursor is used to increase or decrease the height, all headers mcp servers, a claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 14:58</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">I don't like this responsive view where if cursor is used to increase or decrease the height, all headers mcp servers, a</div>
-          </div>
-          <div class="prompt-row" data-filter-text="can you make the heading like skills models used collapsible? claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 14:53</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Can you make the heading like Skills Models Used collapsible?</div>
-          </div>
-          <div class="prompt-row" data-filter-text="its under hooks and above hook elements it's bad push it above make hooks header and the models should be one below the  claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 14:52</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Its under hooks and above hook elements it's bad push it above make Hooks header and the models should be one below the </div>
-          </div>
-          <div class="prompt-row" data-filter-text="i want models used in the right panel on top claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 14:50</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">I want models used in the right panel on top</div>
-          </div>
-          <div class="prompt-row" data-filter-text="top model can go to top right need not be in the middle, find more information that we can show in the middle claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 14:46</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Top model can go to top right need not be in the middle, find more information that we can show in the middle</div>
-          </div>
-          <div class="prompt-row" data-filter-text="2 where sonnet is used for execution, but opus used for orchestration, planning, brainstorming, error resolution, there  claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 14:42</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">2 where sonnet is used for execution, but opus used for orchestration, planning, brainstorming, error resolution, there </div>
-          </div>
-          <div class="prompt-row" data-filter-text="why in models used there is haiku? haiku is lower to sonnet right?, i want opus for planning and for any new development claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 14:39</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Why in models used there is haiku? haiku is lower to sonnet right?, I want opus for planning and for any new development</div>
-          </div>
-          <div class="prompt-row" data-filter-text="stats and activity panel aren't responsive, in a smaller display one chart should come after another and the same for st claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 14:37</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">stats and activity panel aren't responsive, in a smaller display one chart should come after another and the same for st</div>
-          </div>
-          <div class="prompt-row" data-filter-text="the point in footer under ehaders key-paths etc those should also show information on click since
-the place isn't enough claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 12:37</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">the point in footer under ehaders key-paths etc those should also show information on click since
-the place isn't enough</div>
-          </div>
-          <div class="prompt-row" data-filter-text="the point in footer under ehaders key-paths etc those should also show information on click since the place isn't enough claude-personal">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 12:35</span>
-              <span class="prompt-proj">claude-personal</span>
-            </div>
-            <div class="prompt-text">the point in footer under ehaders key-paths etc those should also show information on click since the place isn't enough</div>
-          </div>
-          <div class="prompt-row" data-filter-text="what happened to the footer why it isn't responsive say sometimes i might need just the cheat sheet then i should be abl claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 12:30</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">what happened to the footer why it isn't responsive say sometimes I might need just the cheat sheet then I should be abl</div>
-          </div>
-          <div class="prompt-row" data-filter-text="need not show description for skills, its too long and anyway on click we will be able to find it claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 12:29</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Need not show description for skills, Its too long and anyway on click we will be able to find it</div>
-          </div>
-          <div class="prompt-row" data-filter-text="also can you make the panels and content in them responsive, with cursor click and drag i should be able to increase or  claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 12:25</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">Also can you make the panels and content in them responsive, with cursor click and drag I should be able to increase or </div>
-          </div>
-          <div class="prompt-row" data-filter-text="under hooks you show commands but i don't think it's of much use also are all the hooks listed? claude-professional">
-            <div class="prompt-meta">
-              <span class="prompt-time">05-11 12:22</span>
-              <span class="prompt-proj">claude-professional</span>
-            </div>
-            <div class="prompt-text">under hooks you show commands but I don't think it's of much use also are all the hooks listed?</div>
           </div>
         </div>
       </div>
@@ -1385,7 +1431,7 @@ new Chart(document.getElementById('chart-daily'), {
   data: {
     labels: ["04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11"],
     datasets: [{
-      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 3970],
+      data: [0, 881, 1008, 1197, 3409, 2268, 271, 0, 0, 0, 38, 6885, 129, 0, 0, 1618, 726, 0, 54, 0, 0, 0, 264, 389, 2161, 2924, 12964, 7909, 12240, 5916],
       backgroundColor: 'rgba(217,119,87,0.5)',
       borderColor: 'rgba(217,119,87,0.8)',
       borderWidth: 1,
@@ -1400,7 +1446,7 @@ new Chart(document.getElementById('chart-hourly'), {
   data: {
     labels: ["00h", "01h", "02h", "03h", "04h", "05h", "06h", "07h", "08h", "09h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"],
     datasets: [{
-      data: [0, 710, 165, 2803, 537, 2791, 3712, 2228, 2795, 4408, 2921, 1423, 948, 551, 1090, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
+      data: [0, 710, 165, 2803, 466, 2598, 3448, 2221, 2789, 4403, 2921, 2719, 1471, 551, 1217, 5144, 2589, 1192, 4369, 13739, 3413, 2958, 3180, 112],
       borderColor: '#8b7cf6',
       backgroundColor: 'rgba(139,124,246,0.1)',
       borderWidth: 2,
@@ -1594,9 +1640,12 @@ function showCsModal(idx) {
 
   let layout = loadLayout();
 
+  function isResponsive() { return window.innerWidth <= 900; }
+
   // ── Apply column widths ────────────────────────────────────────────────────
 
   function applyColWidths() {
+    if (isResponsive()) return;
     const w = dash.offsetWidth;
     const col1 = Math.max(MIN_COL, Math.min(layout.col1, w - MIN_COL * 2));
     const col3 = Math.max(MIN_COL, Math.min(layout.col3, w - col1 - MIN_COL));
@@ -1613,6 +1662,7 @@ function showCsModal(idx) {
   };
 
   function applyColRows(colId) {
+    if (isResponsive()) return;
     const panelIds = COL_PANELS[colId];
     const heights = (layout.rows[colId] || []);
     const colEl = document.getElementById('col-' + colId);
@@ -1770,6 +1820,12 @@ function showCsModal(idx) {
   let state = loadFooter();
 
   function applyFooter() {
+    if (window.innerWidth <= 900) {
+      footer.style.height = '';
+      footer.style.setProperty('--footer-h', '');
+      if (dash) dash.style.bottom = '';
+      return;
+    }
     const h = state.collapsed ? HEADER_H : Math.max(MIN_H, Math.min(state.h, MAX_H()));
     footer.style.setProperty('--footer-h', h + 'px');
     footer.style.height = h + 'px';
